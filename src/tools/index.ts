@@ -37,9 +37,8 @@ export class ErrorMsgHandler {
    */
   private showError() {
     try {
-      const { error_msg } = (<AxiosError<{ result: { error_msg: string } }>>this.error).response
-        .data.result
-      message.error(error_msg)
+      const { msg } = (<AxiosError<{ msg: string }>>this.error).response.data
+      message.error(msg)
       return true
     } catch {
       return false

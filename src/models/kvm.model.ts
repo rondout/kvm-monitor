@@ -1,4 +1,4 @@
-import { SelectOptions } from '@gl/main'
+import { SelectOptions, type BaseData } from '@gl/main'
 
 export enum KvmDeviceModel {
   RM1 = 'RM1',
@@ -12,7 +12,7 @@ export const deviceModelSelectOptions = [
   new SelectOptions(KvmDeviceModel.RM10, 'RM10')
 ]
 
-export interface KvmDeviceInfo {
+export interface KvmDeviceInfo extends BaseData {
   ip: string
   password: string
   deviceModel: KvmDeviceModel

@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { mainService } from '@/api/main'
 import { deviceModelSelectOptions, type KvmDeviceInfo } from '@/models/kvm.model'
 import { ErrorMsgHandler } from '@/tools'
 import { validateIP, type FormRules, type OnBeforeOk } from '@gl/main'
@@ -69,6 +70,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'update:open', value: boolean): void
+  (e: 'success'): void
 }>()
 
 const formRef = ref<FormInstance>()
@@ -106,7 +108,11 @@ const handleClose = () => {
 const handleBeforeOk: OnBeforeOk = async (done) => {
   try {
     await formRef.value.validateFields()
+    await mainService.addKvmDevice(formState.value)
+    emits('success')
+    done(true)
   } catch (error) {
+    log(error)
     done(false)
     new ErrorMsgHandler(error)
   }

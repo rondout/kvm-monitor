@@ -21,7 +21,8 @@ export const httpService = new HttpService(
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   (response) => {
-    const res = { data: response.data?.result }
+    log(response)
+    const res = { data: {info: response.data?.info} }
     return res
   },
   (error: AxiosError) => {

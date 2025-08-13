@@ -6,13 +6,10 @@
  * @FilePath: \webrtc-demo\server\tools\index.ts
  * @Description:
  */
-import { resolve } from 'path'
-
 export class BaseResponse<T> {
   constructor(
     public success: boolean = true,
-    public info?: T
+    public info?: T,
+    public msg?: string,
   ) {}
 }
-
-export const kvmListPath = resolve(__dirname, './db/kvm-list.json')

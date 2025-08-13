@@ -1,0 +1,18 @@
+{
+    "kvmList": [
+        {
+            "name": "RM1",
+            "ip": "192.168.60.85",
+            "password": "admin",
+            "deviceModel": "RM1",
+            "id": "fe7feXatDW4N83OsAZ_zm"
+        },
+        {
+            "name": "RM10",
+            "ip": "192.168.1.216",
+            "password": "admin",
+            "deviceModel": "RM10",
+            "id": "JWSGQcGcg3t7lu7F3fRZ6"
+        }
+    ]
+}
