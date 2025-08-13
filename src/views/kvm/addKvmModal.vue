@@ -8,6 +8,7 @@
     @close="handleClose"
   >
     <GlForm
+      v-if="open"
       ref="formRef"
       :model="formState"
       :rules="formRules"

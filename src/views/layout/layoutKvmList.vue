@@ -7,7 +7,7 @@
     <div>
       <BaseNoData />
       <div class="flex">
-        <BaseButton @click="state.addOpen = true">Click to Add KVM</BaseButton>
+        <BaseButton primary @click="state.addOpen = true">Click to Add KVM</BaseButton>
       </div>
     </div>
   </div>
