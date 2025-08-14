@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "dev:server": "nodemon ./server/app.ts",
-    "build": "vue-tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -62,7 +62,7 @@ export const useWsMessage = (kvm: KvmDeviceInfo, onOpen?: (socket?: WebSocketSer
     }
     const wsProtocol = window.location.protocol === "https:" ? "wss" : "ws";
     const socket = new WebSocketService<WsMessage>(
-      `${wsProtocol}://${location.host}/kvm/${kvm.id}/api/ws`,
+      `${wsProtocol}://${location.host}/kvm-api/${kvm.id}/api/ws`,
       null,
       (data) => {
         latestWsApiMessage.value = data;

@@ -8,12 +8,15 @@ import http from "http";
 import { connectKvm, getKvmDevicesFromDb, saveKvmAppsToDb } from "./models/kvm.model";
 import { BaseResponse } from "./models";
 import { nanoid } from "nanoid";
+import { join } from "path";
 
 const HTTP_PORT = 4004;
 const app = express();
 
+
 // 中间件配置
 app.use(express.json());
+app.use(express.static('dist'))
 app.use((req, res, next) => {
   console.log(`[HTTP] ${req.method} ${req.url}`);
   next();

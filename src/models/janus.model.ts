@@ -282,7 +282,7 @@ export class JanusStreamer {
         log('ensureJanus', this.kvm)
         const wsProtocol = location.protocol === 'https:' ? 'wss' : 'ws'
         const config = {
-            server: `${wsProtocol}://${location.host}/kvm/${this.kvm.id}/janus/ws`,
+            server: `${wsProtocol}://${location.host}/kvm-api/${this.kvm.id}/janus/ws`,
             success: () => {
                 this.attachJanus()
             },
