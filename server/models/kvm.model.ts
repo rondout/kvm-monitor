@@ -4,6 +4,8 @@ import { readFile, stat, writeFile } from 'fs/promises';
 import { nanoid } from 'nanoid';
 import { resolve } from 'path';
 import https from 'https'; 
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import { app } from '../httpServer';
 
 export const KVM_DB_PATH = resolve(__dirname, '../db/kvm.json')
 
@@ -138,7 +140,12 @@ export class KvmDeviceConnector {
             console.log('Check auth: ', this.kvm, this.id);
             const res = await this.axios.get(this.genUrl('/auth/check'), { httpsAgent: agent })
             const data = JSON.parse(res.data)
-            return data.ok
+            if(data.ok) {
+                console.log('Check auth success', res.data);
+                return true
+            }
+            console.log('Check auth UnAuthorized');
+            return false
         } catch (error) {
             console.log('Check auth error');
             return false
@@ -162,13 +169,11 @@ export class KvmDeviceConnector {
     private async loginKvm() {
         const password = this.kvm.password
         try {
-            console.log('Login Kvm: ', this.kvm.ip, this.genUrl('/auth/login'));
-            const data = new FormData()
-            data.append('user', KvmDeviceConnector.LoginUser)
-            data.append('passwd', password)
-            const res = await this.axios.post(this.genUrl('/auth/login'), data, {httpsAgent: agent, headers: {
+            console.log('Login Kvm: ', this.kvm.ip, this.genUrl('/auth/login'),  { user: KvmDeviceConnector.LoginUser, passwd:password });
+            const res = await this.axios.post(this.genUrl('/auth/login'), { user: KvmDeviceConnector.LoginUser, passwd:password }, {httpsAgent: agent, headers: {
                 'Content-Type': 'multipart/form-data'
             } })
+            console.log('Login Kvm result: ');
             this.cookies = res.headers['set-cookie'][0]?.split(';')[0] || ''
             console.log('Login Kvm Success: ', this.id, this.cookies);
             await saveCookiesToDb(this.id, this.cookies)
@@ -178,11 +183,24 @@ export class KvmDeviceConnector {
             return false
         }    
     }
+
+    // public connectWs() {
+    //     const ip = this.kvm.ip
+    //     console.log('connectWs', ip);
+    //     app.use(`/api/ws/${ip}`, createProxyMiddleware({
+    //         target: `wss://${ip}/api/ws`,
+    //         changeOrigin: true,
+    //         ws: true,
+    //         secure: false,
+    //         headers: { Cookie: this.cookies }
+    //     }));
+    // }
 }
 
 export const connectKvm = (id: string) => {
     return new Promise(async (resolve, reject) => { 
         const instance = new KvmDeviceConnector(id, res => {
+            // instance.connectWs()
             resolve(res)
         })
     })

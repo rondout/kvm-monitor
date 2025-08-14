@@ -2,6 +2,13 @@ import type { KvmDeviceInfo } from '@/models/kvm.model'
 import { httpService } from './http'
 
 export const mainService = {
+  login() {
+    const data = new FormData()
+    data.append('user', 'admin')
+    data.append('passwd', 'admin')
+    return httpService.get('/api/auth/check')
+    // return httpService.post('/api/auth/login', data)
+  },
   getKvmDeviceList() {
     return httpService.get<KvmDeviceInfo[]>('/api/kvm/list')
   },

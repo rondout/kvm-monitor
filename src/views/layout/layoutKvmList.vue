@@ -18,6 +18,9 @@
     <div class="flex">
       <BaseButton primary @click="state.addOpen = true">Click to Add KVM</BaseButton>
     </div>
+    <div class="flex">
+      <BaseButton primary @click="initApiWsMsgs">Init Api Ws</BaseButton>
+    </div>
   </div>
   <AddKvmModal v-model:open="state.addOpen" @success="getKvmDeviceList" />
 </template>
@@ -29,6 +32,7 @@ import { reactive } from 'vue'
 import { mainService } from '@/api/main'
 import type { KvmDeviceInfo } from '@/models/kvm.model'
 import { ErrorMsgHandler } from '@/tools'
+import { WebSocketService } from '@/api/websocket'
 
 const state = reactive({
   addOpen: false,
@@ -47,9 +51,30 @@ const getKvmDeviceList = async () => {
 
 getKvmDeviceList()
 
+const initApiWsMsgs = async (id: string) => {
+  try {
+    mainService.login()
+  } catch (error) {
+    log(error)
+  }
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+    const socket = new WebSocketService(`${wsProtocol}://${location.host}/api/ws`, null, (data) => {
+        // latestWsApiMessage.value = data
+        // msgs.value.push(data)
+        // parseData(data)
+        console.log('WebSocket Message:', data, id)
+    }, true)
+
+    socket.on('open', () => {
+        // sockets.apiWS = socket
+        log('WebSocket connected')
+    })
+}
+    
 const handleConnect = async (kvm: KvmDeviceInfo) => {
   try {
     await mainService.connectKvm(kvm.id)
+    initApiWsMsgs(kvm.id)
   } catch (error) {
     
   }
