@@ -11,7 +11,7 @@
       <div class="list-item bg-primary" @click="handleConnect(kvm)" v-for="kvm in state.kvmList" :key="kvm.id">
         <div class="inner flex-btw">
           <BaseText>{{ kvm.name }}</BaseText>
-          <BaseTag>{{ kvm.deviceModel }}</BaseTag>  
+          <BaseTag>{{ kvm.deviceModel }}</BaseTag>
         </div>
       </div>
     </div>
@@ -32,12 +32,13 @@ import { reactive } from 'vue'
 import { mainService } from '@/api/main'
 import type { KvmDeviceInfo } from '@/models/kvm.model'
 import { ErrorMsgHandler } from '@/tools'
-import { WebSocketService } from '@/api/websocket'
 
 const state = reactive({
   addOpen: false,
   kvmList: [] as KvmDeviceInfo[]
 })
+
+const emits = defineEmits<{  (e: 'addToPage', kvm: KvmDeviceInfo) }>()
 
 const getKvmDeviceList = async () => {
   try {
@@ -51,32 +52,12 @@ const getKvmDeviceList = async () => {
 
 getKvmDeviceList()
 
-const initApiWsMsgs = async (kvm: KvmDeviceInfo) => {
-  try {
-    mainService.login(kvm.id)
-  } catch (error) {
-    log(error)
-  }
-    const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const socket = new WebSocketService(`${wsProtocol}://${location.host}/kvm/${kvm.id}/ws`, null, (data) => {
-        // latestWsApiMessage.value = data
-        // msgs.value.push(data)
-        // parseData(data)
-        console.log('WebSocket Message:', data)
-    }, true)
-
-    socket.on('open', () => {
-        // sockets.apiWS = socket
-        log('WebSocket connected')
-    })
-}
-    
 const handleConnect = async (kvm: KvmDeviceInfo) => {
   try {
     await mainService.connectKvm(kvm.id)
-    initApiWsMsgs(kvm)
+    emits('addToPage', kvm)
   } catch (error) {
-    
+
   }
 }
 
@@ -87,8 +68,10 @@ const handleConnect = async (kvm: KvmDeviceInfo) => {
   padding: 16px;
   padding-bottom: 8px;
 }
+
 .list-container {
   padding: 8px 16px;
+
   .list-item {
     margin-bottom: 8px;
     padding: 8px 16px;

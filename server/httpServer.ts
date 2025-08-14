@@ -84,7 +84,7 @@ const initProxies = async () => {
       // },
       pathRewrite: (path, req) => {
         const originPath = path;
-        const newPath = '/api' + path.replace(proxyPath, '');
+        const newPath = path.replace(proxyPath, '');
         console.log('path', {originPath, path, newPath, proxyPath});
         return newPath
       },

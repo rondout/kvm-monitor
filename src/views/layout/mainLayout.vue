@@ -10,10 +10,10 @@
     </div>
     <div class="content flex">
       <div class="content-left">
-        <LayoutKvmList />
+        <LayoutKvmList @add-to-page="handleConnectDevice" />
       </div>
       <div class="content-right flex-1">
-        <LayoutKvmContent />
+        <LayoutKvmContent :kvmList="state.kvmList" />
       </div>
     </div>
   </div>
@@ -24,6 +24,21 @@ import { BaseText, GlSvg } from '@gl/main/components'
 import { Tooltip } from 'ant-design-vue'
 import LayoutKvmList from './layoutKvmList.vue'
 import LayoutKvmContent from './layoutKvmContent.vue'
+import { reactive } from 'vue'
+import type { KvmDeviceInfo } from '@/models/kvm.model'
+
+const state = reactive({
+  kvmList: [] as KvmDeviceInfo[],
+})
+
+const handleConnectDevice = (device: KvmDeviceInfo) => {
+  if (state.kvmList.find(item => item.id === device.id)) {
+    return
+  }
+  state.kvmList.push(device)
+}
+
+
 </script>
 
 <style lang="scss" scoped>

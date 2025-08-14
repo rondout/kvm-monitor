@@ -6,7 +6,7 @@ export const mainService = {
     const data = new FormData()
     data.append('user', 'admin')
     data.append('passwd', 'admin')
-    return httpService.get(`/kvm/${id}/upgrade/version`)
+    return httpService.get(`/kvm/${id}/api/upgrade/version`)
     // return httpService.post('/api/auth/login', data)
   },
   getKvmDeviceList() {
