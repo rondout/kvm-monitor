@@ -1,18 +1,1 @@
-{
-    "kvmList": [
-        {
-            "name": "RM1",
-            "ip": "192.168.60.85",
-            "password": "admin",
-            "deviceModel": "RM1",
-            "id": "fe7feXatDW4N83OsAZ_zm"
-        },
-        {
-            "name": "RM10",
-            "ip": "192.168.1.216",
-            "password": "admin",
-            "deviceModel": "RM10",
-            "id": "JWSGQcGcg3t7lu7F3fRZ6"
-        }
-    ]
-}
+{"kvmList":[{"name":"RM1","ip":"192.168.60.85","password":"admin","deviceModel":"RM1","id":"fe7feXatDW4N83OsAZ_zm"},{"name":"RM10","ip":"192.168.1.216","password":"admin","deviceModel":"RM10","id":"JWSGQcGcg3t7lu7F3fRZ6"}],"cookies":[{"id":"fe7feXatDW4N83OsAZ_zm","cookies":"auth_token=195ffeefd523829cd4d7603e594acd55067acf502955610bfe355063038b002e"}]}

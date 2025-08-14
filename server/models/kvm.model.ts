@@ -137,8 +137,8 @@ export class KvmDeviceConnector {
         try {
             console.log('Check auth: ', this.kvm, this.id);
             const res = await this.axios.get(this.genUrl('/auth/check'), { httpsAgent: agent })
-            console.log('Check auth success', res.data);
-            return true
+            const data = JSON.parse(res.data)
+            return data.ok
         } catch (error) {
             console.log('Check auth error');
             return false
@@ -163,7 +163,10 @@ export class KvmDeviceConnector {
         const password = this.kvm.password
         try {
             console.log('Login Kvm: ', this.kvm.ip, this.genUrl('/auth/login'));
-            const res = await this.axios.post(this.genUrl('/auth/login'), { user: KvmDeviceConnector.LoginUser, passwd:password }, {httpsAgent: agent, headers: {
+            const data = new FormData()
+            data.append('user', KvmDeviceConnector.LoginUser)
+            data.append('passwd', password)
+            const res = await this.axios.post(this.genUrl('/auth/login'), data, {httpsAgent: agent, headers: {
                 'Content-Type': 'multipart/form-data'
             } })
             this.cookies = res.headers['set-cookie'][0]?.split(';')[0] || ''
