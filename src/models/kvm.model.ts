@@ -17,4 +17,5 @@ export interface KvmDeviceInfo extends BaseData {
   password: string
   deviceModel: KvmDeviceModel
   name: string
+  cookie?: string
 }

@@ -19,7 +19,7 @@
       <BaseButton primary @click="state.addOpen = true">Click to Add KVM</BaseButton>
     </div>
     <div class="flex">
-      <BaseButton primary @click="initApiWsMsgs">Init Api Ws</BaseButton>
+      <!-- <BaseButton primary @click="initApiWsMsgs">Init Api Ws</BaseButton> -->
     </div>
   </div>
   <AddKvmModal v-model:open="state.addOpen" @success="getKvmDeviceList" />
@@ -58,7 +58,7 @@ const initApiWsMsgs = async (id: string) => {
     log(error)
   }
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const socket = new WebSocketService(`${wsProtocol}://${location.host}/api/ws`, null, (data) => {
+    const socket = new WebSocketService(`${wsProtocol}://${location.host}/api/ws?id=${id}`, null, (data) => {
         // latestWsApiMessage.value = data
         // msgs.value.push(data)
         // parseData(data)

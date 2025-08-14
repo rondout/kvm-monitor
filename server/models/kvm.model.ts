@@ -39,6 +39,11 @@ export const setDbData = async (data: KvmDbConstruct) => {
 export const getKvmAppsFromDb = async () => { 
     try {
         const db = await getDbData()
+        
+        db.kvmList = db.kvmList.map((item) => {
+            item.cookie = db.cookies?.find((cookie) => cookie.id === item.id)?.cookies
+            return item
+        })
         return (db.kvmList || []) as KvmDeviceInfo[]
     } catch (error) {
         return []
