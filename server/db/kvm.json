@@ -12,7 +12,17 @@
             "ip": "192.168.1.216",
             "password": "admin",
             "deviceModel": "RM10",
-            "id": "JWSGQcGcg3t7lu7F3fRZ6"
+            "id": "Leg66goPHl4RsR6TjFvaB"
+        }
+    ],
+    "cookies": [
+        {
+            "id": "fe7feXatDW4N83OsAZ_zm",
+            "cookies": "auth_token=961869add61a5217d540d91e6df83f2f2c375dea124cbadab5b6a2d9c4944072"
+        },
+        {
+            "id": "Leg66goPHl4RsR6TjFvaB",
+            "cookies": "auth_token=2e72baa5b123f7e590ea8c88af533c2fb6741333242ca34c56c5e72a8f545965"
         }
     ]
 }

@@ -5,7 +5,6 @@ import { nanoid } from 'nanoid';
 import { resolve } from 'path';
 import https from 'https'; 
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import { app } from '../httpServer';
 
 export const KVM_DB_PATH = resolve(__dirname, '../db/kvm.json')
 
@@ -36,7 +35,7 @@ export const setDbData = async (data: KvmDbConstruct) => {
     }
 }
 
-export const getKvmAppsFromDb = async () => { 
+export const getKvmDevicesFromDb = async () => { 
     try {
         const db = await getDbData()
         
@@ -93,7 +92,7 @@ export const saveKvmAppsToDb = async (data: KvmDeviceInfo) => {
     try {
         // if(!stat(KVM_DB_PATH))
         const db = await getDbData()
-        const res = await setDbData({...db, kvmList: [...(db.kvmList || []), {...data, id: nanoid()}]})
+        const res = await setDbData({...db, kvmList: [...(db.kvmList || []), data]})
         return res
     } catch (error) {
         console.log('Save Kvm Error: ', error);
@@ -174,8 +173,11 @@ export class KvmDeviceConnector {
     private async loginKvm() {
         const password = this.kvm.password
         try {
-            console.log('Login Kvm: ', this.kvm.ip, this.genUrl('/auth/login'),  { user: KvmDeviceConnector.LoginUser, passwd:password });
-            const res = await this.axios.post(this.genUrl('/auth/login'), { user: KvmDeviceConnector.LoginUser, passwd:password }, {httpsAgent: agent, headers: {
+            const data = new FormData()
+            data.append('user', KvmDeviceConnector.LoginUser)
+            data.append('passwd', password)
+            console.log('Login Kvm: ', this.kvm.ip, this.genUrl('/auth/login'),  data);
+            const res = await this.axios.post(this.genUrl('/auth/login'), data, {httpsAgent: agent, headers: {
                 'Content-Type': 'multipart/form-data'
             } })
             console.log('Login Kvm result: ');

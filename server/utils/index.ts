@@ -8,20 +8,39 @@
  */
 export function parseCookies(cookies: string): { [key: string]: string } {
   try {
-    const cookieObj: { [key: string]: string } = {}
+    const cookieObj: { [key: string]: string } = {};
     // 分割 Cookie 字符串
-    const cookieArray = cookies.split('; ')
+    const cookieArray = cookies.split("; ");
 
     // 遍历每个 Cookie 键值对
     for (const cookie of cookieArray) {
-      const [key, value] = cookie.split('=')
+      const [key, value] = cookie.split("=");
       if (key && value) {
-        cookieObj[key.trim()] = decodeURIComponent(value.trim())
+        cookieObj[key.trim()] = decodeURIComponent(value.trim());
       }
     }
 
-    return cookieObj
+    return cookieObj;
   } catch {
-    return {}
+    return {};
+  }
+}
+
+/** 从url中获取查询参数数据 */
+export function parseUrlQuery<T>(
+  url: string = window.location.href
+): T {
+  try {
+    const query = url.split("?")[1];
+    const params = new URLSearchParams(query);
+    console.log(query);
+    
+    const result = {};
+    params.forEach((value, key) => {
+      result[key] = value;
+    });
+    return <T>result;
+  } catch (error) {
+    return <T>{};
   }
 }

@@ -51,18 +51,18 @@ const getKvmDeviceList = async () => {
 
 getKvmDeviceList()
 
-const initApiWsMsgs = async (id: string) => {
+const initApiWsMsgs = async (kvm: KvmDeviceInfo) => {
   try {
-    mainService.login()
+    mainService.login(kvm.id)
   } catch (error) {
     log(error)
   }
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const socket = new WebSocketService(`${wsProtocol}://${location.host}/api/ws?id=${id}`, null, (data) => {
+    const socket = new WebSocketService(`${wsProtocol}://${location.host}/kvm/${kvm.id}/ws`, null, (data) => {
         // latestWsApiMessage.value = data
         // msgs.value.push(data)
         // parseData(data)
-        console.log('WebSocket Message:', data, id)
+        console.log('WebSocket Message:', data)
     }, true)
 
     socket.on('open', () => {
@@ -74,7 +74,7 @@ const initApiWsMsgs = async (id: string) => {
 const handleConnect = async (kvm: KvmDeviceInfo) => {
   try {
     await mainService.connectKvm(kvm.id)
-    initApiWsMsgs(kvm.id)
+    initApiWsMsgs(kvm)
   } catch (error) {
     
   }

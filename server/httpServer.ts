@@ -1,38 +1,36 @@
 /*
  * @Author: shufei.han
- * @Date: 2024-11-07 16:17:49
- * @LastEditors: shufei.han
- * @LastEditTime: 2024-11-11 14:54:11
- * @FilePath: \webrtc-demo\server\tools\httpServer.ts
- * @Description:
+ * @Description: 修复WebSocket代理同时保留原有HTTP代理
  */
-import express from 'express'
-import logger from 'morgan'
-import { BaseResponse } from './models'
-import { connectKvm, getCookiesById, getKvmAppsFromDb, getKvmDeviceById, saveKvmAppsToDb } from './models/kvm.model'
-import { createProxyMiddleware } from 'http-proxy-middleware'
+import express from "express";
+import { createProxyMiddleware } from "http-proxy-middleware";
+import http from "http";
+import { connectKvm, getKvmDevicesFromDb, saveKvmAppsToDb } from "./models/kvm.model";
+import { BaseResponse } from "./models";
+import { nanoid } from "nanoid";
 
-const HTTP_PORT = 4004
-// @ts-ignore
-export const app = express()
+const HTTP_PORT = 4004;
+const app = express();
 
-// @ts-ignore
-app.use(logger('dev'))
-app.use(express.json())
+// 中间件配置
+app.use(express.json());
+app.use((req, res, next) => {
+  console.log(`[HTTP] ${req.method} ${req.url}`);
+  next();
+});
 
-// app.get('/', (_, res) => {
-//   res.send('Hello World!')
-// })
+// 存储设备代理配置
+const deviceProxies = new Map<string, ReturnType<typeof createProxyMiddleware>>();
 
-// app.get('/api/kvm/list', async (_, res) => {
-//   const list = await getKvmAppsFromDb()
-//   res.send(new BaseResponse(true, list))
-// })
 
 app.post('/api/kvm/add', async (req, res) => {
-  const success = await saveKvmAppsToDb(req.body)
-  console.log(success, req.body);
+  const id = nanoid()
+  const kvm = {...req.body, id}
+  const success = await saveKvmAppsToDb(kvm)
+  console.log(success, kvm);
   if(success) {
+    await connectKvm(id)
+    await initProxies()
     return res.send(new BaseResponse(true, req.body, 'Add kvm success!'))
   }
   res.status(500).send(new BaseResponse(false, req.body, 'Add kvm error!'))
@@ -62,25 +60,82 @@ app.post('/api/kvm/connect', async (req, res) => {
 // })
 
 app.get('/api/kvm/list', async (_, res) => {
-  const list = await getKvmAppsFromDb()
+  const list = await getKvmDevicesFromDb()
   res.send(new BaseResponse(true, list))
 })
 
-app.use('/', createProxyMiddleware({
-    // target: 'https://192.168.60.85/',
-    secure: false, // 如果目标服务器没有有效的SSL证书，可以禁用SSL验证
-    // pathRewrite: (path) => path.replace(/^\/kvmApi/, ''),
-    changeOrigin: true,
-    // @ts-ignore
-    logLevel: 'debug', // 启用详细日志
-    router: (path) => { 
-      console.log({path: path.url});
-      
-      return 'https://192.168.60.85/'  
-    },
-    ws: true,
-}));
+// 初始化代理
+const initProxies = async () => {
+  const kvmList = await getKvmDevicesFromDb();
+  
+  kvmList.forEach(item => {
+    const proxyPath = `/kvm-api/${item.id}`;
+    const target = `https://${item.ip}`;
 
-const server = app.listen(HTTP_PORT, undefined, () =>
-  console.log('listening on: http://localhost:' + HTTP_PORT)
-)
+    // 创建HTTP代理中间件
+    const proxy = createProxyMiddleware({
+      target,
+      secure: false,
+      changeOrigin: true,
+      // @ts-ignore
+      logLevel: 'debug',
+      // pathRewrite: {
+      //   [`^${proxyPath}`]: '/api'  // 移除设备ID前缀
+      // },
+      pathRewrite: (path, req) => {
+        const originPath = path;
+        const newPath = '/api' + path.replace(proxyPath, '');
+        console.log('path', {originPath, path, newPath, proxyPath});
+        return newPath
+      },
+      headers: {
+        Cookie: item.cookie
+      }
+    });
+
+    // 注册代理中间件
+    app.use(proxyPath, proxy);
+    deviceProxies.set(item.id, proxy);
+
+    console.log(`[Proxy] Registered ${item.id} -> ${target}`);
+  });
+};
+
+// 创建HTTP服务器
+const server = http.createServer(app);
+
+// 单独处理WebSocket升级请求
+server.on('upgrade', (req, socket, head) => {
+  try {
+    const deviceId = req.url?.split('/')[2]; // 从/kvm-api/DEVICE_ID/...提取
+    const proxy = deviceId ? deviceProxies.get(deviceId) : null;
+
+    if (!proxy) {
+      console.error(`[WS] Device ${deviceId} not found`);
+      socket.destroy();
+      return;
+    }
+
+    // 调用原始中间件的upgrade处理
+    // @ts-ignore
+    proxy.upgrade(req, socket, head);
+  } catch (err) {
+    console.error('[WS] Proxy error:', err);
+    socket.destroy();
+  }
+});
+
+// 启动服务
+const start = async () => {
+  await initProxies();
+  
+  server.listen(HTTP_PORT, () => {
+    console.log(`
+      Server running on port ${HTTP_PORT}
+      HTTP Proxy: http://localhost:${HTTP_PORT}/kvm-api/:deviceId/...
+      WS Proxy:   ws://localhost:${HTTP_PORT}/kvm-api/:deviceId/ws
+    `);
+  });
+};
+
+start();

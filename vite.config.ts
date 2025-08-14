@@ -19,6 +19,12 @@ export default defineConfig({
         changeOrigin: true,
         ws: true
         // rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/kvm': {
+        target: 'http://localhost:4004',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace('/kvm', '/kvm-api')
       }
     }
   }
