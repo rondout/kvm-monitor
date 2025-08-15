@@ -1,0 +1,123 @@
+@use './base.scss';
+@use './antd.scss';
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#app {
+  color: var(--gl-color-text-level1);
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: var(--gl-color-brand-primary);
+  transition: 0.4s;
+  /* padding: 3px; */
+}
+
+a:hover {
+  color: var(--gl-color-brand-hover);
+}
+
+a:active {
+  color: var(--gl-color-brand-active);
+}
+
+ul {
+  list-style:none;
+  padding: 0;
+}
+
+li{
+  list-style-type:none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: var(--gl-color-bg-surface1);
+  /* border: 0.5px solid #d9d9d9; */
+  border-radius: 8px;
+}
+
+
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal {
+  background-color: #D9D9D9;
+  border: 1px solid #D9D9D9;
+  border-radius: 8px;
+}
+
+html[data-theme=theme-dark] ::-webkit-scrollbar-thumb:vertical,
+html[data-theme=theme-dark] ::-webkit-scrollbar-thumb:horizontal {
+  background-color: rgba(255, 255, 255, 0.35);
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+}
+
+/* AntDesign 全局样式修改 */
+body {
+  .ant-modal-content, .ant-modal-confirm-content {
+    .ant-btn {
+      box-shadow: unset !important;
+    }
+  }
+  .base-drawer-footer-content {
+    .ant-btn {
+      box-shadow: unset !important;
+    }
+  }
+}
+/* 密集表单的表单域不展示help信息 */
+.dense-form  {
+  .ant-form-item-explain {
+    display: none;
+  }
+}
+
+.dense-form {
+  .ant-form-item-explain {
+    display: none;
+  }
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+}
+
+.position-relative {
+  position: relative;
+}
+.position-absolute {
+  position: absolute;
+}
+.bordered {
+  border: 1px solid var(--gl-color-line-border1);
+}
+
+input::-ms-clear,input::-ms-reveal{
+  display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.bg-surface3 {
+  background-color: var(--gl-color-bg-surface2);
+}

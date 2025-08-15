@@ -1,0 +1,18 @@
+<svg width="47" height="36" viewBox="0 0 47 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 4732">
+<rect width="47" height="36" fill="white"/>
+<g id="&#230;&#143;&#146;&#231;&#148;&#187;">
+<g id="Group 598">
+<g id="Rectangle 36">
+<mask id="path-1-inside-1_708_4979" fill="white">
+<path d="M1 15H46V28H1V15Z"/>
+</mask>
+<path d="M1 15H46V28H1V15Z" fill="#303030"/>
+<path d="M46 28V29.1828H47.1828V28H46ZM1 28H-0.182764V29.1828H1V28ZM44.8172 15V28H47.1828V15H44.8172ZM46 26.8172H1V29.1828H46V26.8172ZM2.18276 28V15H-0.182764V28H2.18276Z" fill="#919191" mask="url(#path-1-inside-1_708_4979)"/>
+</g>
+<path id="Vector 14" d="M10.6429 9L1 15H46L36.8929 9H10.6429Z" fill="#E1E3E6"/>
+<ellipse id="Ellipse 111" cx="5.61816" cy="21.1663" rx="1.12363" ry="1.02564" fill="#38FA38"/>
+</g>
+</g>
+</g>
+</svg>
