@@ -6,6 +6,7 @@
     "dev": "vite",
     "dev:server": "nodemon ./server/app.ts",
     "build": "vite build",
+    "build:server": "tsc -p tsconfig.server.json server  --outDir dist-server",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,12 +16,22 @@
     "express": "^5.1.0",
     "http-proxy": "^1.18.1",
     "https": "^1.0.0",
-    "nanoid": "^5.1.5",
+    "nanoid": "^2.1.11",
     "pinia": "^3.0.3",
     "sass": "^1.90.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1",
     "ws": "^8.18.3"
+  },
+  "main": "dist-server/app.js",
+  "bin": "dist-server/app.js",
+  "pkg": {
+    "scripts": "dist-server/**/*",
+    "outputPath": "build",
+    "assets": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ]
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
@@ -31,8 +42,11 @@
     "http-proxy-middleware": "^3.0.5",
     "morgan": "^1.10.1",
     "nodemon": "^3.1.10",
+    "pkg": "^5.8.1",
+    "tsup": "^8.5.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
+    "vite-plugin-node": "^7.0.0",
     "vue-tsc": "^3.0.5"
   }
 }
