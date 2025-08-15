@@ -16,13 +16,13 @@ export const DEFAULT_REQUEST_TIMEOUT = 30000
 /** 展示登录过期确认弹窗是否已经开启 */
 
 export const httpService = new HttpService(
-  { timeout: DEFAULT_REQUEST_TIMEOUT, apiPrefix: '/cloud-basic' },
+  { timeout: DEFAULT_REQUEST_TIMEOUT, apiPrefix: '/cloud-basic', baseURL: 'http://localhost:4004' },
   () => {},
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   (response) => {
     log(response)
-    const res = { data: {info: response.data?.info} }
+    const res = { data: { info: response.data?.info } }
     return res
   },
   (error: AxiosError) => {

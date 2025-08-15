@@ -1,0 +1,83 @@
+.wscn-http404-container[data-v-0a933963] {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.wscn-http404-container .info .info-sorry[data-v-0a933963] {
+  color: var(--gl-color-brand-primary);
+  line-height: 36px;
+  font-weight: 500;
+}
+.wscn-http404-container .info .info-text[data-v-0a933963] {
+  font-weight: 400;
+}
+.wscn-http404-container .info .refresh[data-v-0a933963] {
+  margin-left: 24px;
+}
+.wscn-http404-container .img-block[data-v-0a933963] {
+  width: 100%;
+  display: block;
+}
+@media (min-width: 1366px) {
+.wscn-http404-800[data-v-0a933963] {
+    display: none;
+}
+.wscn-http404[data-v-0a933963] {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.wscn-http404 .info[data-v-0a933963] {
+    width: 440px;
+    margin-right: 64px;
+}
+.wscn-http404 .info .info-sorry[data-v-0a933963] {
+    height: 58px;
+    font-size: 48px;
+}
+.wscn-http404 .info .info-text[data-v-0a933963] {
+    font-size: 24px;
+    color: var(--gl-color-text-level1);
+    line-height: 36px;
+    margin: 20px 0 60px 0;
+}
+.wscn-http404 .image[data-v-0a933963] {
+    width: 400px;
+    height: 290px;
+}
+}
+@media (max-width: 1365px) {
+.wscn-http404[data-v-0a933963] {
+    display: none;
+}
+.wscn-http404-container[data-v-0a933963] {
+    display: flex;
+    justify-content: center;
+}
+.wscn-http404-container .wscn-http404-800[data-v-0a933963] {
+    width: 360px;
+}
+.wscn-http404-container .wscn-http404-800 .image[data-v-0a933963] {
+    margin: 0 auto;
+    width: 160px;
+    height: 116px;
+}
+.wscn-http404-container .wscn-http404-800 .info .info-sorry[data-v-0a933963] {
+    margin: 20px 0;
+    height: 48px;
+    font-size: 40px;
+    text-align: center;
+}
+.wscn-http404-container .wscn-http404-800 .info .info-text[data-v-0a933963] {
+    font-size: 20px;
+    text-align: center;
+    color: var(--gl-color-text-level2);
+    line-height: 30px;
+}
+.wscn-http404-container .wscn-http404-800 .info .info-btn[data-v-0a933963] {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+}

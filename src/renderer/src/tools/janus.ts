@@ -95,6 +95,7 @@ export var Janus = (function (factory) {
 		define(factory);
 	} else if (typeof module === 'object' && module.exports) {
 		module.exports = factory();
+		return factory();
 	} else if (typeof window === 'object') {
 		return factory();
 	}

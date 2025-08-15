@@ -1,0 +1,80 @@
+.container[data-v-21a59271] {
+  background: var(--gl-color-bg-page);
+  overflow: auto;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.container .content[data-v-21a59271] {
+  padding: 24px 0;
+}
+.container .white-page-container[data-v-21a59271] {
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: contain;
+  width: 970px;
+  height: 600px;
+  position: relative;
+  border-radius: 20px;
+}
+.container .white-page-container .kvm-login-logo[data-v-21a59271] {
+  position: absolute;
+  top: 32%;
+  left: 3%;
+  width: 12%;
+  display: none;
+}
+.container .white-page-container .white-page-content[data-v-21a59271] {
+  position: absolute;
+  right: 0;
+  overflow: auto;
+  width: 50%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+@media screen and (max-width: 1080px) {
+.container .white-page-container[data-v-21a59271] {
+    background-image: none !important;
+    width: calc(100% - 24px);
+}
+.container .white-page-container .white-page-content[data-v-21a59271] {
+    width: 100%;
+}
+.container .white-page-container .kvm-login-logo[data-v-21a59271] {
+    display: none;
+}
+}.auth-form-container[data-v-a3d5a4a0] {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 16px 0;
+  padding-bottom: 50px;
+}
+.auth-form-container .login-form .title-container[data-v-a3d5a4a0] {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.auth-form-container .login-form .title-container .title[data-v-a3d5a4a0] {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+  margin-top: 32px;
+}
+.auth-form-container .login-form .operation-btn[data-v-a3d5a4a0] {
+  margin: 4px 0 32px;
+}
+.auth-form-container .login-form .forget[data-v-a3d5a4a0] {
+  text-align: center;
+  color: var(--gl-color-text-level3);
+}
+@media screen and (max-width: 380px) {
+.auth-form-container[data-v-a3d5a4a0] {
+    padding: 20px;
+}
+.auth-form-container .login-form[data-v-a3d5a4a0] {
+    width: 100%;
+}
+}
