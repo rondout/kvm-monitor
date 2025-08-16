@@ -7,9 +7,9 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
-    "strict": false,
     "composite": true,
     "strictNullChecks": false,
+    "moduleResolution": "bundler",
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {

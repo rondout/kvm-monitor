@@ -15,6 +15,9 @@ export const mainService = {
   addKvmDevice(info: KvmDeviceInfo) {
     return httpService.post('/api/kvm/add', info)
   },
+  deleteKvmDevice(id: string) {
+    return httpService.delete(`/api/kvm/delete/${id}`)
+  },  
   connectKvm(id: string) {
     return httpService.post('/api/kvm/connect', null, { params: { id } })
   }

@@ -1,21 +1,43 @@
 <template>
-    <div ref="streamWindowRef" id="stream-window"
-        :class="{ 'bg-default': true, bordered: true, 'stream-window-inited': state.initVideoJanusFinished }">
-        <div ref="streamBoxRef" :id="STREAM_BOX_ID"
-            @blur="handleStreamBoxBlur" @focus="handleStreamBoxFocus" @click="handleStreamBoxFocus"
-            @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
-            <video :width="384 * 2" :id="videoElId" ref="streamVideoRef" playsinline autoplay
-                muted></video>
-            <!-- <canvas v-else-if="kvmStore.isDirectMode" :id="kvmStore.videoElId" ref="streamCanvasRef"></canvas>
+  <div
+    id="stream-window"
+    ref="streamWindowRef"
+    :class="{
+      'bg-default': true,
+      bordered: true,
+      'stream-window-inited': state.initVideoJanusFinished
+    }"
+  >
+    <div
+      :id="STREAM_BOX_ID"
+      ref="streamBoxRef"
+      @blur="handleStreamBoxBlur"
+      @focus="handleStreamBoxFocus"
+      @click="handleStreamBoxFocus"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
+    >
+      <video
+        :id="videoElId"
+        ref="streamVideoRef"
+        class="full-width kvm-video"
+        playsinline
+        autoplay
+        muted
+      ></video>
+      <!-- <canvas v-else-if="kvmStore.isDirectMode" :id="kvmStore.videoElId" ref="streamCanvasRef"></canvas>
             <NoaHdmiSignalPage v-if="kvmStore.noHDMISignal" />
             <MicroPhoneStatus v-if="kvmStore.isWebrtcMode" /> -->
-        </div>
-        <div v-if="!state.initVideoJanusFinished" class="stream-window-wrapper position-absolute bg-default"></div>
-        <!-- <Teleport to="body">
+    </div>
+    <div
+      v-if="!state.initVideoJanusFinished"
+      class="stream-window-wrapper position-absolute bg-default"
+    ></div>
+    <!-- <Teleport to="body">
             <video ref="localStreamVideoRef" v-show="state.showLocalStream && kvmStore.configState.cameraOn"
                 id="local-stream-video" playsinline autoplay muted></video>
         </Teleport> -->
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -49,7 +71,7 @@ const localStreamVideoRef = ref<HTMLVideoElement>()
 // const audioRef = ref<HTMLAudioElement>()
 
 const props = defineProps<{
-    kvm: KvmDeviceInfo
+  kvm: KvmDeviceInfo
 }>()
 
 const STREAM_BOX_ID = 'stream-box' + props.kvm.id
@@ -62,15 +84,15 @@ const videoElId = `kvm-video-${props.kvm.id}`
 
 /** 组件状态 */
 const state = reactive({
-    info: [],
-    videoJanus: {} as JanusStreamer,
-    audioJanus: {} as JanusStreamer,
-    mouseHandler: null as MouseEventHandler,
-    // keyboardHandler: null as KeyboardEventHandler,
-    wideScreen: false,
-    /** 初始化视频流 Janus 完成 */
-    initVideoJanusFinished: false,
-    showLocalStream: false,
+  info: [],
+  videoJanus: {} as JanusStreamer,
+  audioJanus: {} as JanusStreamer,
+  mouseHandler: null as MouseEventHandler,
+  // keyboardHandler: null as KeyboardEventHandler,
+  wideScreen: false,
+  /** 初始化视频流 Janus 完成 */
+  initVideoJanusFinished: false,
+  showLocalStream: false
 })
 
 // const orientation = useServerStorageRef(ServerStorageKeys.ORIENTATION)
@@ -140,102 +162,106 @@ const state = reactive({
 // }
 /** 鼠标进入窗口，开启鼠标控制 */
 const handleMouseEnter = () => {
-    // if (isMouseAbsolute.value) {
-    //     kvmStore.setMouseEnabled(true)
-    // }
+  // if (isMouseAbsolute.value) {
+  //     kvmStore.setMouseEnabled(true)
+  // }
 }
 /** 鼠标离开窗口，关闭鼠标控制 */
 const handleMouseLeave = () => {
-    // if (isMouseAbsolute.value) {
-    //     kvmStore.setMouseEnabled(false)
-    // }
+  // if (isMouseAbsolute.value) {
+  //     kvmStore.setMouseEnabled(false)
+  // }
 }
 const handleStreamBoxBlur = () => {
-    // 这里当鼠标离开窗口时，清空所有按下的按键，避免出现卡键的情况
-    // KeyboardEventHandler.clearAllPressDownKeys()
-    // kvmStore.setKeyboardEnabled(false)
+  // 这里当鼠标离开窗口时，清空所有按下的按键，避免出现卡键的情况
+  // KeyboardEventHandler.clearAllPressDownKeys()
+  // kvmStore.setKeyboardEnabled(false)
 }
 const handleStreamBoxFocus = () => {
-    // kvmStore.setKeyboardEnabled(true)
-    streamBoxRef.value?.focus()
+  // kvmStore.setKeyboardEnabled(true)
+  streamBoxRef.value?.focus()
 }
 // 连接成功
 const setActive = (isMediaAndFirst = false) => {
-    if (browser.is_safari) {
-        state.initVideoJanusFinished = true
-    }
-    // calcStreamWindowSize(streamWindowRef.value)
-    // kvmStore.setStreamState(true)
-    // if (kvmStore.isWebrtcMode) {
-    //     calcStreamWindowSize(streamWindowRef.value)
-    // } else if (isMediaAndFirst) {
-    //     calcStreamWindowSize(streamWindowRef.value)
-    // }
+  if (browser.is_safari) {
+    state.initVideoJanusFinished = true
+  }
+  // calcStreamWindowSize(streamWindowRef.value)
+  // kvmStore.setStreamState(true)
+  // if (kvmStore.isWebrtcMode) {
+  //     calcStreamWindowSize(streamWindowRef.value)
+  // } else if (isMediaAndFirst) {
+  //     calcStreamWindowSize(streamWindowRef.value)
+  // }
 }
 // 断开连接
 const setInactive = () => {
-    // state.initVideoJanusFinished = true
-    // kvmStore.setStreamState(false)
+  // state.initVideoJanusFinished = true
+  // kvmStore.setStreamState(false)
 }
 // 更新状态信息
 const setInfo = (...args) => {
-    const fps = args[3]?.fps
-    if (fps) {
-        state.initVideoJanusFinished = true
-    }
-    // if (!kvmStore.isWebrtcMode) {
-    //     kvmStore.setStreamState(true)
-    // }
-    // kvmStore.setStreamInfo(args)
+  const fps = args[3]?.fps
+  if (fps) {
+    state.initVideoJanusFinished = true
+  }
+  // if (!kvmStore.isWebrtcMode) {
+  //     kvmStore.setStreamState(true)
+  // }
+  // kvmStore.setStreamInfo(args)
 }
 
 /** 初始化 Janus（webrtc视频流连接） */
 const initJanus = async () => {
-    // await msgStore.waitForRtcConfig()
-    state.videoJanus?.stopStream?.()
-    // state.videoMedia?.stopStream?.()
-    state.showLocalStream = false
-    state.initVideoJanusFinished = false
-    // const rtcConfig = msgStore.rtcConfig
-    const janus = new JanusStreamer(
-        props.kvm,
-        streamVideoRef.value,
-        { setActive, setInactive, setInfo, rtcConfig: undefined },
-        false, true, async () => {
-            state.initVideoJanusFinished = true
-        }, () => {
-            state.showLocalStream = true
-        })
-    state.videoJanus = janus
-    // msgStore.setVideoJanusName(janus.getName())
+  // await msgStore.waitForRtcConfig()
+  state.videoJanus?.stopStream?.()
+  // state.videoMedia?.stopStream?.()
+  state.showLocalStream = false
+  state.initVideoJanusFinished = false
+  // const rtcConfig = msgStore.rtcConfig
+  const janus = new JanusStreamer(
+    props.kvm,
+    streamVideoRef.value,
+    { setActive, setInactive, setInfo, rtcConfig: undefined },
+    false,
+    true,
+    async () => {
+      state.initVideoJanusFinished = true
+    },
+    () => {
+      state.showLocalStream = true
+    }
+  )
+  state.videoJanus = janus
+  // msgStore.setVideoJanusName(janus.getName())
 }
 const initMediaStreamer = () => {
-    // state.videoMedia?.stopStream?.()
-    state.videoJanus?.stopStream?.()
-    state.showLocalStream = false
-    state.initVideoJanusFinished = false
-    // if (kvmStore.noHDMISignal) {
-    //     state.initVideoJanusFinished = true
-    // }
-    // configAudioStreamer(ConfigAudioType.STOP_MIC_AND_SOUND)
-    // state.videoMedia = new MediaStreamer(
-    //     streamCanvasRef.value,
-    //     {
-    //         setActive, setInactive, setInfo, organizeHook() {
+  // state.videoMedia?.stopStream?.()
+  state.videoJanus?.stopStream?.()
+  state.showLocalStream = false
+  state.initVideoJanusFinished = false
+  // if (kvmStore.noHDMISignal) {
+  //     state.initVideoJanusFinished = true
+  // }
+  // configAudioStreamer(ConfigAudioType.STOP_MIC_AND_SOUND)
+  // state.videoMedia = new MediaStreamer(
+  //     streamCanvasRef.value,
+  //     {
+  //         setActive, setInactive, setInfo, organizeHook() {
 
-    //         }
-    //     },
-    // )
-    // msgStore.setVideoJanusName(state.videoMedia.getName())
+  //         }
+  //     },
+  // )
+  // msgStore.setVideoJanusName(state.videoMedia.getName())
 }
 /** 初始化 */
 const init = () => {
-    // if (kvmStore.isWebrtcMode) {
-    new KvmStreamConnector(props.kvm, videoElId, STREAM_BOX_ID)
-    initJanus()
-    // } else if (kvmStore.isDirectMode) {
-    //     initMediaStreamer()
-    // }
+  // if (kvmStore.isWebrtcMode) {
+  new KvmStreamConnector(props.kvm, videoElId, STREAM_BOX_ID)
+  initJanus()
+  // } else if (kvmStore.isDirectMode) {
+  //     initMediaStreamer()
+  // }
 }
 
 // const initAudioAndMic = () => {
@@ -248,30 +274,30 @@ const init = () => {
 // }
 
 onMounted(async () => {
-    init()
-    // initAudioAndMic()
-    // initMouseKeyboard()
-    // calcStreamWindowSize(streamWindowRef.value)
-    // 在这里注册重连事件，重连后需要重新初始化 Janus，以及判断之前的声音会否开启
-    // configStore.on('reconnected', () => {
-    //     closeStream()
-    //     init()
-    //     // initAudioAndMic()
-    //     // if (kvmStore.configState.volumeOn || !systemStore.state.micMuted) {
-    //     //     // 如果断开连接之前声音是开启的状态，需要重新开启声音
-    //     //     configAudioStreamer(ConfigAudioType.ENABLE_MIC_AND_SOUND)
-    //     // }
-    // })
+  init()
+  // initAudioAndMic()
+  // initMouseKeyboard()
+  // calcStreamWindowSize(streamWindowRef.value)
+  // 在这里注册重连事件，重连后需要重新初始化 Janus，以及判断之前的声音会否开启
+  // configStore.on('reconnected', () => {
+  //     closeStream()
+  //     init()
+  //     // initAudioAndMic()
+  //     // if (kvmStore.configState.volumeOn || !systemStore.state.micMuted) {
+  //     //     // 如果断开连接之前声音是开启的状态，需要重新开启声音
+  //     //     configAudioStreamer(ConfigAudioType.ENABLE_MIC_AND_SOUND)
+  //     // }
+  // })
 })
 
 const closeStream = () => {
-    state.videoJanus?.stopStream?.()
-    // state.videoMedia?.stopStream?.()
-    // configAudioStreamer(ConfigAudioType.STOP_MIC_AND_SOUND)
+  state.videoJanus?.stopStream?.()
+  // state.videoMedia?.stopStream?.()
+  // configAudioStreamer(ConfigAudioType.STOP_MIC_AND_SOUND)
 }
 
 onBeforeUnmount(() => {
-    closeStream()
+  closeStream()
 })
 /** 触发窗口大小计算的依赖项 */
 // const triggers = computed(() => {
@@ -332,152 +358,158 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .player-container {
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    // align-items: flex-end;
-    align-items: center;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  // align-items: flex-end;
+  align-items: center;
 
-    .player-content {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex: 1;
-        overflow: auto;
-    }
+  .player-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    overflow: auto;
+  }
 }
 
 .wide-screen-player {
-    #stream-window {
-        width: 100% !important;
-        height: 100% !important;
-    }
+  #stream-window {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 .full-screen-player {
-    .header-tool {
-        opacity: 0.88;
-    }
+  .header-tool {
+    opacity: 0.88;
+  }
 
-    #stream-window {
-        border-radius: 0;
-    }
+  #stream-window {
+    border-radius: 0;
+  }
 }
 
 .header-collapsed {
-    #stream-window {
-        #stream-box {
-            height: 100%;
-        }
+  #stream-window {
+    #stream-box {
+      height: 100%;
     }
+  }
 }
 
 #stream-window {
-    // visibility: hidden;
-    outline: none;
-    overflow: hidden;
-    position: relative;
-    // resize: both;
-    // border: 2px solid #282a2e;
-    box-sizing: border-box;
-    white-space: nowrap;
-    // min-width: 400px;
-    // min-height: 200px;
-    height: 100%;
+  // visibility: hidden;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  // resize: both;
+  // border: 2px solid #282a2e;
+  box-sizing: border-box;
+  white-space: nowrap;
+  // min-width: 400px;
+  // min-height: 200px;
+  height: 100%;
+  width: 100%;
+
+  // opacity: 0;
+  #stream-box {
     width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
 
-    // opacity: 0;
-    #stream-box {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        position: relative;
-        display: inline-flex;
-        justify-content: center;
-
-        #stream-video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            outline: none;
-            // mix-blend-mode: screen;
-        }
+    #stream-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      outline: none;
+      // mix-blend-mode: screen;
     }
+  }
 
-    .no-cursor {
-        cursor: none;
-    }
+  .no-cursor {
+    cursor: none;
+  }
 
-    .stream-window-wrapper {
-        // background-color: ;
-        width: 100%;
-        height: 100%;
-        top: 0;
-    }
+  .stream-window-wrapper {
+    // background-color: ;
+    width: 100%;
+    height: 100%;
+    top: 0;
+  }
 
-    &.stream-window-inited {
-        opacity: 1;
-        animation: glOpacityAnimation 1s ease-in;
-        transition: height 0.3s linear, width 0.3s linear;
-    }
+  &.stream-window-inited {
+    opacity: 1;
+    animation: glOpacityAnimation 1s ease-in;
+    transition:
+      height 0.3s linear,
+      width 0.3s linear;
+  }
 }
 
 .hdmi-lost {
-    #stream-window {
-        background-color: #262626 !important;
-    }
+  #stream-window {
+    background-color: #262626 !important;
+  }
 }
 
 .header-tool {
-    position: absolute;
-    z-index: 1;
+  position: absolute;
+  z-index: 1;
 }
 
 :deep(.ant-spin-nested-loading) {
-    width: 100%;
+  width: 100%;
+  height: 100%;
+
+  & > div {
     height: 100%;
+    position: absolute;
+    width: 100%;
 
-    &>div {
-        height: 100%;
-        position: absolute;
-        width: 100%;
-
-        .ant-spin-spinning {
-            height: 100%;
-            position: absolute;
-            width: 100%;
-            max-height: unset;
-        }
+    .ant-spin-spinning {
+      height: 100%;
+      position: absolute;
+      width: 100%;
+      max-height: unset;
     }
+  }
 
-    .ant-spin-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-    }
+  .ant-spin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+}
+
+.kvm-video {
+  display: block;
 }
 
 #local-stream-video {
-    position: absolute;
-    /* z-index: 1; */
-    width: 163px;
-    background: #000;
-    right: 0;
-    top: 50px;
+  position: absolute;
+  /* z-index: 1; */
+  width: 163px;
+  background: #000;
+  right: 0;
+  top: 50px;
 }
 
 @keyframes glOpacityAnimation {
-    0% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 0;
+  }
 
-    100% {
-        opacity: 1;
-    }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

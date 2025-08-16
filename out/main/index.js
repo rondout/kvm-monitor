@@ -5015,6 +5015,15 @@ app.get("/api/kvm/list", async (_, res) => {
   const list = await getKvmDevicesFromDb();
   res.send(new BaseResponse(true, list));
 });
+app.delete("/api/kvm/delete/:id", async (req, res) => {
+  const id = req.params.id;
+  const result = await deleteKvmDevicesFromDb(id);
+  if (result) {
+    res.send(new BaseResponse(true, result));
+  } else {
+    res.status(500).send(new BaseResponse(false, result));
+  }
+});
 const initProxies = async () => {
   const kvmList = await getKvmDevicesFromDb();
   kvmList.forEach((item) => {
@@ -5073,8 +5082,8 @@ const start = async () => {
 };
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1366,
+    height: 768,
     show: false,
     autoHideMenuBar: true,
     ...process.platform === "linux" ? { icon } : {},
@@ -5090,7 +5099,6 @@ function createWindow() {
   });
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
-    mainWindow.webContents.openDevTools();
   });
   mainWindow.webContents.setWindowOpenHandler((details) => {
     electron.shell.openExternal(details.url);

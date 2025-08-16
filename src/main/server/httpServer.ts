@@ -86,6 +86,15 @@ app.get('/api/kvm/list', async (_, res) => {
   res.send(new BaseResponse(true, list))
 })
 
+app.delete('/api/kvm/delete/:id', async (req, res) => {
+  const id = req.params.id
+  const result = await deleteKvmDevicesFromDb(id)
+  if (result) {
+    res.send(new BaseResponse(true, result))
+  } else {
+    res.status(500).send(new BaseResponse(false, result))
+  }
+})
 // 初始化代理
 const initProxies = async () => {
   const kvmList = await getKvmDevicesFromDb()
