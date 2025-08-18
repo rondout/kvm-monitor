@@ -14,87 +14,87 @@ import type { WebSocketService } from '@renderer/api/websocket'
 // @ts-ignore
 const __ascii_encoder = new TextEncoder('ascii')
 
-export function sendHidEvent (ws: { send: WebSocketService['send'] }, { event_type, event }) {
-    log('[hid] send', event_type, event, ws)
-    if (!ws) {
-        return
-    }
-    if (event_type == 'key') {
-        const data = __ascii_encoder.encode('\x01\x00' + event.key)
-        data[1] = (event.state ? 1 : 0)
-        ws.send(data)
-    } else if (event_type == 'mouse_button') {
-        const data = __ascii_encoder.encode('\x02\x00' + event.button)
-        data[1] = (event.state ? 1 : 0)
-        ws.send(data)
-
-    } else if (event_type == 'mouse_move') {
-        const data = new Uint8Array([
-            3,
-            (event.to.x >> 8) & 0xFF, event.to.x & 0xFF,
-            (event.to.y >> 8) & 0xFF, event.to.y & 0xFF,
-        ])
-        ws.send(data)
-
-    } else if (event_type == 'mouse_relative' || event_type == 'mouse_wheel') {
-        let data
-        if (Array.isArray(event.delta)) {
-            data = new Int8Array(2 + event.delta.length * 2)
-            let index = 0
-            for (const delta of event.delta) {
-                data[index + 2] = delta['x']
-                data[index + 3] = delta['y']
-                index += 2
-            }
-        } else {
-            data = new Int8Array([0, 0, event.delta.x, event.delta.y])
-        }
-        data[0] = (event_type == 'mouse_relative' ? 4 : 5)
-        data[1] = (event.squash ? 1 : 0)
-        ws.send(data)
-    }
-}
-
-export function remap (x: number, a1: number, b1: number, a2: number, b2: number) {
-    const remapped = Math.round((x - a1) / b1 * (b2 - a2) + a2)
-    if (remapped < a2) {
-        return a2
-    } else if (remapped > b2) {
-        return b2
-    }
-    return remapped
-}
-
-export function getResolution (el: HTMLVideoElement | HTMLCanvasElement) {
-    if (el instanceof HTMLVideoElement) {
-        return {
-            real_width: (el.videoWidth || el.offsetWidth),
-            real_height: (el.videoHeight || el.offsetHeight),
-            view_width: el.offsetWidth,
-            view_height: el.offsetHeight,
-        }
+export function sendHidEvent(ws: { send: WebSocketService['send'] }, { event_type, event }) {
+//   log('[hid] send', event_type, event, ws)
+  if (!ws) {
+    return
+  }
+  if (event_type == 'key') {
+    const data = __ascii_encoder.encode('\x01\x00' + event.key)
+    data[1] = event.state ? 1 : 0
+    ws.send(data)
+  } else if (event_type == 'mouse_button') {
+    const data = __ascii_encoder.encode('\x02\x00' + event.button)
+    data[1] = event.state ? 1 : 0
+    ws.send(data)
+  } else if (event_type == 'mouse_move') {
+    const data = new Uint8Array([
+      3,
+      (event.to.x >> 8) & 0xff,
+      event.to.x & 0xff,
+      (event.to.y >> 8) & 0xff,
+      event.to.y & 0xff
+    ])
+    ws.send(data)
+  } else if (event_type == 'mouse_relative' || event_type == 'mouse_wheel') {
+    let data
+    if (Array.isArray(event.delta)) {
+      data = new Int8Array(2 + event.delta.length * 2)
+      let index = 0
+      for (const delta of event.delta) {
+        data[index + 2] = delta['x']
+        data[index + 3] = delta['y']
+        index += 2
+      }
     } else {
-        return {
-            real_width: (el.width || el.offsetWidth),
-            real_height: (el.height || el.offsetHeight),
-            view_width: el.offsetWidth,
-            view_height: el.offsetHeight,
-        }
+      data = new Int8Array([0, 0, event.delta.x, event.delta.y])
     }
+    data[0] = event_type == 'mouse_relative' ? 4 : 5
+    data[1] = event.squash ? 1 : 0
+    ws.send(data)
+  }
 }
 
-export function getGeometry (id: string) {
-    const el = $(id)
-    const res = getResolution(el)
-    const ratio = Math.min(res.view_width / res.real_width, res.view_height / res.real_height)
+export function remap(x: number, a1: number, b1: number, a2: number, b2: number) {
+  const remapped = Math.round(((x - a1) / b1) * (b2 - a2) + a2)
+  if (remapped < a2) {
+    return a2
+  } else if (remapped > b2) {
+    return b2
+  }
+  return remapped
+}
+
+export function getResolution(el: HTMLVideoElement | HTMLCanvasElement) {
+  if (el instanceof HTMLVideoElement) {
     return {
-        x: Math.round((res.view_width - ratio * res.real_width) / 2),
-        y: Math.round((res.view_height - ratio * res.real_height) / 2),
-        width: Math.round(ratio * res.real_width),
-        height: Math.round(ratio * res.real_height),
-        real_width: res.real_width,
-        real_height: res.real_height,
+      real_width: el.videoWidth || el.offsetWidth,
+      real_height: el.videoHeight || el.offsetHeight,
+      view_width: el.offsetWidth,
+      view_height: el.offsetHeight
     }
+  } else {
+    return {
+      real_width: el.width || el.offsetWidth,
+      real_height: el.height || el.offsetHeight,
+      view_width: el.offsetWidth,
+      view_height: el.offsetHeight
+    }
+  }
+}
+
+export function getGeometry(id: string) {
+  const el = $(id)
+  const res = getResolution(el)
+  const ratio = Math.min(res.view_width / res.real_width, res.view_height / res.real_height)
+  return {
+    x: Math.round((res.view_width - ratio * res.real_width) / 2),
+    y: Math.round((res.view_height - ratio * res.real_height) / 2),
+    width: Math.round(ratio * res.real_width),
+    height: Math.round(ratio * res.real_height),
+    real_width: res.real_width,
+    real_height: res.real_height
+  }
 }
 /** 是否是通过webview访问 */
 // export const isWebview = () => {
@@ -143,7 +143,7 @@ export function getGeometry (id: string) {
 // }
 
 /** 打开新窗口（需要兼容webview） */
-export function openAnotherWindow (url: string) {
-    const newWindow = window.open(url, '_blank')
-    log(newWindow)
+export function openAnotherWindow(url: string) {
+  const newWindow = window.open(url, '_blank')
+  log(newWindow)
 }

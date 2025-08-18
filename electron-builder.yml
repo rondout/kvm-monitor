@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: electron-app
+productName: kvm-monitor
 directories:
   buildResources: build
 files:
@@ -9,10 +9,13 @@ files:
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+electronLanguages:
+  - en
+  - zh-CN
 asarUnpack:
   - resources/**
 win:
-  executableName: electron-app
+  executableName: kvm-monitor
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

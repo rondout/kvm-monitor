@@ -3,6 +3,7 @@ import { SelectOptions, type BaseData } from '@gl/main'
 import { useWsMessage } from './message.model'
 import { MouseEventHandler } from './mouse.model'
 import { $ } from './janus.model'
+import { KeyboardEventHandler } from '@renderer/tools/keyboard'
 
 export enum KvmDeviceModel {
   RM1 = 'RM1',
@@ -54,6 +55,7 @@ export class KvmStreamConnector {
   private videoBox: HTMLDivElement
 
   public mouseHandler: MouseEventHandler
+  public keyboardHandler: KeyboardEventHandler
 
   constructor(
     private kvm: KvmDeviceInfo,
@@ -72,5 +74,6 @@ export class KvmStreamConnector {
 
   private initMouseEvent(ws: WebSocketService) {
     this.mouseHandler = new MouseEventHandler(this.videoBox, this.videoElSelector, ws)
+    this.keyboardHandler = new KeyboardEventHandler(this.videoBox, ws)
   }
 }

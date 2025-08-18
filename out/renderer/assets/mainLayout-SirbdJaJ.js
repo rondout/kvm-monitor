@@ -1,4 +1,4 @@
-import { M as Me, c as cr, r as ref, a as computed, b as reactive, d as browser, e as defineComponent, f as createBlock, w as withCtx, u as unref, g as bo, h as createCommentVNode, i as go, j as createVNode, k as fo, F as FormItem, v as vo, l as an, o as openBlock, E as ErrorMsgHandler, m as createElementBlock, n as Fragment, p as createBaseVNode, A as At, $ as $o, q as ko, s as renderList, Q, t as createTextVNode, x as toDisplayString, y as Mo, z as onMounted, B as onBeforeUnmount, C as normalizeClass, T as Tooltip, D as x } from "./index-DpmXzz-i.js";
+import { M as Me, c as cr, r as ref, a as computed, b as reactive, d as browser, e as defineComponent, f as createBlock, w as withCtx, u as unref, g as bo, h as createCommentVNode, i as go, j as createVNode, k as fo, F as FormItem, v as vo, l as an, o as openBlock, E as ErrorMsgHandler, m as createElementBlock, n as createBaseVNode, p as createTextVNode, t as toDisplayString, A as At, O as Oo, q as withModifiers, x, s as Mo, y as Fragment, $ as $o, z as ko, B as renderList, Q, D, C as onMounted, G as onBeforeUnmount, H as normalizeClass, I as normalizeStyle, J as renderSlot, K as Ae, T as Tooltip, L as useRouter, N as removeLogin } from "./index-BWnXo6Ks.js";
 import { _ as _export_sfc } from "./_plugin-vue_export-helper-1tPrXgE0.js";
 function Er(e = 1500, t) {
   return new Promise((n) => {
@@ -35,6 +35,9 @@ const mainService = {
   },
   addKvmDevice(info) {
     return httpService.post("/api/kvm/add", info);
+  },
+  deleteKvmDevice(id) {
+    return httpService.delete(`/api/kvm/delete/${id}`);
   },
   connectKvm(id) {
     return httpService.post("/api/kvm/connect", null, { params: { id } });
@@ -114,10 +117,12 @@ class WebSocketService {
         log("heartbeat error");
         return;
       }
-      this.send(JSON.stringify({
-        event_type: "ping",
-        event: {}
-      }));
+      this.send(
+        JSON.stringify({
+          event_type: "ping",
+          event: {}
+        })
+      );
       this.sendHeartbeat();
     }, HEARTBEAT_INTERVAL);
   }
@@ -6937,7 +6942,6 @@ class JanusStreamer {
 }
 const __ascii_encoder = new TextEncoder("ascii");
 function sendHidEvent(ws, { event_type, event }) {
-  log("[hid] send", event_type, event, ws);
   if (!ws) {
     return;
   }
@@ -7109,7 +7113,6 @@ class MouseEventHandler {
     this.el = el;
     this.videoId = videoId;
     this.apiWs = apiWs;
-    log("[mouse] init", this.el, this.videoId);
     this.bindEvents();
     this.updateRate();
   }
@@ -7138,14 +7141,8 @@ class MouseEventHandler {
   /** 绑定事件 */
   bindEvents() {
     this.el.addEventListener("wheel", (e) => this.onMouseWheelScroll(e));
-    this.el.addEventListener(
-      "mouseenter",
-      (e) => this.onMouseLeaveOrEnter(e, true)
-    );
-    this.el.addEventListener(
-      "mouseleave",
-      (e) => this.onMouseLeaveOrEnter(e, false)
-    );
+    this.el.addEventListener("mouseenter", (e) => this.onMouseLeaveOrEnter(e, true));
+    this.el.addEventListener("mouseleave", (e) => this.onMouseLeaveOrEnter(e, false));
     this.el.addEventListener("contextmenu", (e) => e.preventDefault());
     this.el.addEventListener("mousedown", (e) => this.onMouseDown(e));
     this.el.addEventListener("mouseup", (e) => this.onMouseUp(e));
@@ -7232,7 +7229,6 @@ class MouseEventHandler {
   }
   /** 鼠标移动事件 */
   onMouseMove(event) {
-    log("mousemove", event);
     event.preventDefault();
     if (this.absolute) {
       const rect = event.target.getBoundingClientRect();
@@ -7247,24 +7243,8 @@ class MouseEventHandler {
   }
   sendOrPlanRelativeMove(delta) {
     delta = {
-      x: Math.min(
-        Math.max(
-          -127,
-          Math.floor(
-            delta.x * DEFAULT_RELATIVE_SENSE / 10
-          )
-        ),
-        127
-      ),
-      y: Math.min(
-        Math.max(
-          -127,
-          Math.floor(
-            delta.y * DEFAULT_RELATIVE_SENSE / 10
-          )
-        ),
-        127
-      )
+      x: Math.min(Math.max(-127, Math.floor(delta.x * DEFAULT_RELATIVE_SENSE / 10)), 127),
+      y: Math.min(Math.max(-127, Math.floor(delta.y * DEFAULT_RELATIVE_SENSE / 10)), 127)
     };
     if (this.configState.squashRelativeMoves) {
       this.relative_deltas.push(delta);
@@ -7346,6 +7326,546 @@ class MouseEventHandler {
     this.updateRate();
   }
 }
+var AllKeyboardKeys = /* @__PURE__ */ ((AllKeyboardKeys2) => {
+  AllKeyboardKeys2["Escape"] = "Escape";
+  AllKeyboardKeys2["F1"] = "F1";
+  AllKeyboardKeys2["F2"] = "F2";
+  AllKeyboardKeys2["F3"] = "F3";
+  AllKeyboardKeys2["F4"] = "F4";
+  AllKeyboardKeys2["F5"] = "F5";
+  AllKeyboardKeys2["F6"] = "F6";
+  AllKeyboardKeys2["F7"] = "F7";
+  AllKeyboardKeys2["F8"] = "F8";
+  AllKeyboardKeys2["F9"] = "F9";
+  AllKeyboardKeys2["F10"] = "F10";
+  AllKeyboardKeys2["F11"] = "F11";
+  AllKeyboardKeys2["F12"] = "F12";
+  AllKeyboardKeys2["Backquote"] = "Backquote";
+  AllKeyboardKeys2["Digit1"] = "Digit1";
+  AllKeyboardKeys2["Digit2"] = "Digit2";
+  AllKeyboardKeys2["Digit3"] = "Digit3";
+  AllKeyboardKeys2["Digit4"] = "Digit4";
+  AllKeyboardKeys2["Digit5"] = "Digit5";
+  AllKeyboardKeys2["Digit6"] = "Digit6";
+  AllKeyboardKeys2["Digit7"] = "Digit7";
+  AllKeyboardKeys2["Digit8"] = "Digit8";
+  AllKeyboardKeys2["Digit9"] = "Digit9";
+  AllKeyboardKeys2["Digit0"] = "Digit0";
+  AllKeyboardKeys2["Minus"] = "Minus";
+  AllKeyboardKeys2["Equal"] = "Equal";
+  AllKeyboardKeys2["Backspace"] = "Backspace";
+  AllKeyboardKeys2["Tab"] = "Tab";
+  AllKeyboardKeys2["KeyQ"] = "KeyQ";
+  AllKeyboardKeys2["KeyW"] = "KeyW";
+  AllKeyboardKeys2["KeyE"] = "KeyE";
+  AllKeyboardKeys2["KeyR"] = "KeyR";
+  AllKeyboardKeys2["KeyT"] = "KeyT";
+  AllKeyboardKeys2["KeyY"] = "KeyY";
+  AllKeyboardKeys2["KeyU"] = "KeyU";
+  AllKeyboardKeys2["KeyI"] = "KeyI";
+  AllKeyboardKeys2["KeyO"] = "KeyO";
+  AllKeyboardKeys2["KeyP"] = "KeyP";
+  AllKeyboardKeys2["BracketLeft"] = "BracketLeft";
+  AllKeyboardKeys2["BracketRight"] = "BracketRight";
+  AllKeyboardKeys2["Backslash"] = "Backslash";
+  AllKeyboardKeys2["CapsLock"] = "CapsLock";
+  AllKeyboardKeys2["KeyA"] = "KeyA";
+  AllKeyboardKeys2["KeyS"] = "KeyS";
+  AllKeyboardKeys2["KeyD"] = "KeyD";
+  AllKeyboardKeys2["KeyF"] = "KeyF";
+  AllKeyboardKeys2["KeyG"] = "KeyG";
+  AllKeyboardKeys2["KeyH"] = "KeyH";
+  AllKeyboardKeys2["KeyJ"] = "KeyJ";
+  AllKeyboardKeys2["KeyK"] = "KeyK";
+  AllKeyboardKeys2["KeyL"] = "KeyL";
+  AllKeyboardKeys2["Semicolon"] = "Semicolon";
+  AllKeyboardKeys2["Quote"] = "Quote";
+  AllKeyboardKeys2["Enter"] = "Enter";
+  AllKeyboardKeys2["KeyZ"] = "KeyZ";
+  AllKeyboardKeys2["KeyX"] = "KeyX";
+  AllKeyboardKeys2["KeyC"] = "KeyC";
+  AllKeyboardKeys2["KeyV"] = "KeyV";
+  AllKeyboardKeys2["KeyB"] = "KeyB";
+  AllKeyboardKeys2["KeyN"] = "KeyN";
+  AllKeyboardKeys2["KeyM"] = "KeyM";
+  AllKeyboardKeys2["Comma"] = "Comma";
+  AllKeyboardKeys2["Period"] = "Period";
+  AllKeyboardKeys2["Slash"] = "Slash";
+  AllKeyboardKeys2["Space"] = "Space";
+  AllKeyboardKeys2["ContextMenu"] = "ContextMenu";
+  AllKeyboardKeys2["ScrollLock"] = "ScrollLock";
+  AllKeyboardKeys2["Pause"] = "Pause";
+  AllKeyboardKeys2["Insert"] = "Insert";
+  AllKeyboardKeys2["Home"] = "Home";
+  AllKeyboardKeys2["PageUp"] = "PageUp";
+  AllKeyboardKeys2["Delete"] = "Delete";
+  AllKeyboardKeys2["End"] = "End";
+  AllKeyboardKeys2["PageDown"] = "PageDown";
+  AllKeyboardKeys2["ArrowUp"] = "ArrowUp";
+  AllKeyboardKeys2["ArrowLeft"] = "ArrowLeft";
+  AllKeyboardKeys2["ArrowDown"] = "ArrowDown";
+  AllKeyboardKeys2["ArrowRight"] = "ArrowRight";
+  AllKeyboardKeys2["Power"] = "Power";
+  AllKeyboardKeys2["NumLock"] = "NumLock";
+  AllKeyboardKeys2["NumpadDivide"] = "NumpadDivide";
+  AllKeyboardKeys2["NumpadMultiply"] = "NumpadMultiply";
+  AllKeyboardKeys2["NumpadSubtract"] = "NumpadSubtract";
+  AllKeyboardKeys2["Numpad7"] = "Numpad7";
+  AllKeyboardKeys2["Numpad8"] = "Numpad8";
+  AllKeyboardKeys2["Numpad9"] = "Numpad9";
+  AllKeyboardKeys2["Numpad4"] = "Numpad4";
+  AllKeyboardKeys2["Numpad5"] = "Numpad5";
+  AllKeyboardKeys2["Numpad6"] = "Numpad6";
+  AllKeyboardKeys2["NumpadAdd"] = "NumpadAdd";
+  AllKeyboardKeys2["Numpad1"] = "Numpad1";
+  AllKeyboardKeys2["Numpad2"] = "Numpad2";
+  AllKeyboardKeys2["Numpad3"] = "Numpad3";
+  AllKeyboardKeys2["Numpad0"] = "Numpad0";
+  AllKeyboardKeys2["NumpadDecimal"] = "NumpadDecimal";
+  AllKeyboardKeys2["NumpadEnter"] = "NumpadEnter";
+  AllKeyboardKeys2["ShiftLeft"] = "ShiftLeft";
+  AllKeyboardKeys2["ShiftRight"] = "ShiftRight";
+  AllKeyboardKeys2["ControlLeft"] = "ControlLeft";
+  AllKeyboardKeys2["MetaLeft"] = "MetaLeft";
+  AllKeyboardKeys2["MetaRight"] = "MetaRight";
+  AllKeyboardKeys2["AltLeft"] = "AltLeft";
+  AllKeyboardKeys2["AltRight"] = "AltRight";
+  AllKeyboardKeys2["Win"] = "Win";
+  AllKeyboardKeys2["ControlRight"] = "ControlRight";
+  AllKeyboardKeys2["PrintScreen"] = "PrintScreen";
+  return AllKeyboardKeys2;
+})(AllKeyboardKeys || {});
+class KeyboardKey {
+  constructor(code, title, subtitle, width = 32, lockStatus, withLock, withDot, ledPosition = "center", titlePosition = "center", subtitlePosition, isGutter = false, shrink = 1) {
+    this.code = code;
+    this.title = title;
+    this.subtitle = subtitle;
+    this.width = width;
+    this.lockStatus = lockStatus;
+    this.withLock = withLock;
+    this.withDot = withDot;
+    this.ledPosition = ledPosition;
+    this.titlePosition = titlePosition;
+    this.subtitlePosition = subtitlePosition;
+    this.isGutter = isGutter;
+    this.shrink = shrink;
+  }
+}
+class KeyboardKeyWithCustomShrink extends KeyboardKey {
+  constructor(code, title, subtitle, shrink = 1, titlePosition = "left", lockStatus, withLock, withDot, ledPosition = "left", subtitlePosition, isGutter = false) {
+    super(
+      code,
+      title,
+      subtitle,
+      void 0,
+      lockStatus,
+      withLock,
+      withDot,
+      ledPosition,
+      titlePosition,
+      subtitlePosition,
+      isGutter
+    );
+    this.code = code;
+    this.title = title;
+    this.subtitle = subtitle;
+    this.shrink = shrink;
+    this.titlePosition = titlePosition;
+    this.lockStatus = lockStatus;
+    this.withLock = withLock;
+    this.withDot = withDot;
+    this.ledPosition = ledPosition;
+    this.subtitlePosition = subtitlePosition;
+    this.isGutter = isGutter;
+  }
+}
+class KeyboardKeyWithShortCut extends KeyboardKey {
+  constructor(code, title, shortcutTitle, subtitle, width = 32, lockStatus, withLock, withDot, ledPosition = "left", titlePosition = "left", subtitlePosition, isGutter = false, shrink = 1) {
+    super(
+      code,
+      title,
+      subtitle,
+      width,
+      lockStatus,
+      withLock,
+      withDot,
+      ledPosition,
+      titlePosition,
+      subtitlePosition,
+      isGutter
+    );
+    this.code = code;
+    this.title = title;
+    this.shortcutTitle = shortcutTitle;
+    this.subtitle = subtitle;
+    this.width = width;
+    this.lockStatus = lockStatus;
+    this.withLock = withLock;
+    this.withDot = withDot;
+    this.ledPosition = ledPosition;
+    this.titlePosition = titlePosition;
+    this.subtitlePosition = subtitlePosition;
+    this.isGutter = isGutter;
+    this.shrink = shrink;
+  }
+}
+const KeyGutter = { isGutter: true, width: 32, shrink: 1 };
+const TinyKeyGutter = { isGutter: true, width: 24, shrink: 0.5 };
+const genKeyboardKeyList = (config) => {
+  return {
+    left: [
+      [
+        new KeyboardKey(
+          "Escape",
+          "Esc",
+          void 0,
+          void 0,
+          void 0,
+          void 0,
+          void 0,
+          void 0,
+          "left"
+        ),
+        TinyKeyGutter,
+        new KeyboardKey("F1", "F1"),
+        new KeyboardKey("F2", "F2"),
+        new KeyboardKey("F3", "F3"),
+        new KeyboardKey("F4", "F4"),
+        TinyKeyGutter,
+        new KeyboardKey("F5", "F5"),
+        new KeyboardKey("F6", "F6"),
+        new KeyboardKey("F7", "F7"),
+        new KeyboardKey("F8", "F8"),
+        TinyKeyGutter,
+        new KeyboardKey("F9", "F9"),
+        new KeyboardKey("F10", "F10"),
+        new KeyboardKey("F11", "F11"),
+        new KeyboardKey("F12", "F12")
+      ],
+      [
+        new KeyboardKey("Backquote", "~", "`"),
+        new KeyboardKey("Digit1", "!", "1"),
+        new KeyboardKey("Digit2", "@", "2"),
+        new KeyboardKey("Digit3", "#", "3"),
+        new KeyboardKey("Digit4", "$", "4"),
+        new KeyboardKey("Digit5", "%", "5"),
+        new KeyboardKey("Digit6", "^", "6"),
+        new KeyboardKey("Digit7", "&", "7"),
+        new KeyboardKey("Digit8", "*", "8"),
+        new KeyboardKey("Digit9", "(", "9"),
+        new KeyboardKey("Digit0", ")", "0"),
+        new KeyboardKey("Minus", "_", "-"),
+        new KeyboardKey("Equal", "+", "="),
+        new KeyboardKeyWithCustomShrink(
+          "Backspace",
+          "Backspace",
+          void 0,
+          1.5,
+          "right"
+        )
+      ],
+      [
+        new KeyboardKeyWithCustomShrink("Tab", "Tab", "", 1.5),
+        new KeyboardKey("KeyQ", "Q"),
+        new KeyboardKey("KeyW", "W"),
+        new KeyboardKey("KeyE", "E"),
+        new KeyboardKey("KeyR", "R"),
+        new KeyboardKey("KeyT", "T"),
+        new KeyboardKey("KeyY", "Y"),
+        new KeyboardKey("KeyU", "U"),
+        new KeyboardKey("KeyI", "I"),
+        new KeyboardKey("KeyO", "O"),
+        new KeyboardKey("KeyP", "P"),
+        new KeyboardKey("BracketLeft", "{", "["),
+        new KeyboardKey("BracketRight", "}", "]"),
+        new KeyboardKey("Backslash", "|", "\\")
+      ],
+      [
+        new KeyboardKeyWithCustomShrink(
+          "CapsLock",
+          "Caps",
+          void 0,
+          1.75,
+          "left",
+          config?.caps,
+          true,
+          void 0,
+          "right"
+        ),
+        new KeyboardKey("KeyA", "A"),
+        new KeyboardKey("KeyS", "S"),
+        new KeyboardKey("KeyD", "D"),
+        new KeyboardKey("KeyF", "F"),
+        new KeyboardKey("KeyG", "G"),
+        new KeyboardKey("KeyH", "H"),
+        new KeyboardKey("KeyJ", "J"),
+        new KeyboardKey("KeyK", "K"),
+        new KeyboardKey("KeyL", "L"),
+        new KeyboardKey("Semicolon", ":", ";"),
+        new KeyboardKey("Quote", '"', "'"),
+        new KeyboardKeyWithCustomShrink("Enter", "Enter", void 0, 1.75, "right")
+      ],
+      [
+        new KeyboardKeyWithCustomShrink("ShiftLeft", "Shift", void 0, 2),
+        new KeyboardKey("KeyZ", "Z"),
+        new KeyboardKey("KeyX", "X"),
+        new KeyboardKey("KeyC", "C"),
+        new KeyboardKey("KeyV", "V"),
+        new KeyboardKey("KeyB", "B"),
+        new KeyboardKey("KeyN", "N"),
+        new KeyboardKey("KeyM", "M"),
+        new KeyboardKey("Comma", ",", "<"),
+        new KeyboardKey("Period", ".", ">"),
+        new KeyboardKey("Slash", "/", "?"),
+        new KeyboardKeyWithCustomShrink("ShiftRight", "Shift", void 0, 2, "right")
+      ],
+      [
+        new KeyboardKeyWithCustomShrink("ControlLeft", "Ctrl", void 0, 1.5),
+        new KeyboardKeyWithCustomShrink("MetaLeft", "Win", void 0, 1.5),
+        new KeyboardKeyWithCustomShrink("AltLeft", "Alt", void 0, 1.5),
+        new KeyboardKeyWithCustomShrink("Space", "Space", void 0, 4.4, "center"),
+        new KeyboardKeyWithCustomShrink("AltRight", "Alt", void 0, 1.5, "right"),
+        new KeyboardKeyWithCustomShrink("Win", "Win", void 0, 1.5, "right"),
+        new KeyboardKeyWithCustomShrink(
+          "ContextMenu",
+          "Menu",
+          void 0,
+          1.5,
+          "right"
+        ),
+        new KeyboardKeyWithCustomShrink(
+          "ControlRight",
+          "Ctrl",
+          void 0,
+          1.5,
+          "right"
+        )
+      ]
+    ],
+    right: [
+      [
+        new KeyboardKey("PrintScreen", "Pt/Sq"),
+        new KeyboardKey(
+          "ScrollLock",
+          "ScrLk",
+          void 0,
+          void 0,
+          config?.scroll,
+          true
+        ),
+        new KeyboardKey("Pause", "Pause")
+      ],
+      [
+        new KeyboardKey("Insert", "Ins"),
+        new KeyboardKey("Home", "Home"),
+        new KeyboardKey("PageUp", "PgUp")
+      ],
+      [
+        new KeyboardKey("Delete", "Del"),
+        new KeyboardKey("End", "End"),
+        new KeyboardKey("PageDown", "PgDn")
+      ],
+      [KeyGutter, KeyGutter, KeyGutter],
+      [KeyGutter, new KeyboardKey("ArrowUp", "↑"), KeyGutter],
+      [
+        new KeyboardKey("ArrowLeft", "←"),
+        new KeyboardKey("ArrowDown", "↓"),
+        new KeyboardKey("ArrowRight", "→")
+      ]
+    ],
+    bottom: [
+      [
+        new KeyboardKeyWithShortCut("PrintScreen", "Pt/Sq", ["Pt/", "Sq"]),
+        new KeyboardKeyWithShortCut(
+          "ScrollLock",
+          "ScrLk",
+          ["Scr", "Lk"],
+          void 0,
+          void 0,
+          config?.scroll,
+          true
+        ),
+        new KeyboardKeyWithShortCut("Pause", "Pause", ["Pau", "se"]),
+        new KeyboardKeyWithShortCut("Insert", "Ins"),
+        new KeyboardKeyWithShortCut("Home", "Home", ["Ho", "me"]),
+        new KeyboardKeyWithShortCut("PageUp", "PgUp", ["Pg", "Up"]),
+        new KeyboardKeyWithShortCut("PageDown", "PgDn", ["Pg", "Dn"]),
+        new KeyboardKey("Delete", "Del"),
+        new KeyboardKey("End", "End")
+      ]
+    ],
+    bottomRight: [
+      [KeyGutter, new KeyboardKey("ArrowUp", "↑"), KeyGutter],
+      [
+        new KeyboardKey("ArrowLeft", "←"),
+        new KeyboardKey("ArrowDown", "↓"),
+        new KeyboardKey("ArrowRight", "→")
+      ]
+    ]
+  };
+};
+const { ControlLeft, AltLeft, MetaLeft, KeyP, ShiftLeft, F4, Tab, Delete, KeyW } = AllKeyboardKeys;
+const KeyboardShortcutConfigMap = /* @__PURE__ */ new Map([
+  [0, { keys: [ControlLeft, AltLeft, Delete], label: "Ctrl + Alt + Del" }],
+  [5, { keys: [MetaLeft, KeyP], label: "Win + P" }],
+  [1, { keys: [AltLeft, ShiftLeft], label: "Alt + Shift" }],
+  [4, { keys: [ControlLeft, KeyW], label: "Ctrl + W" }],
+  [2, { keys: [AltLeft, Tab], label: "Alt + Tab" }],
+  [3, { keys: [AltLeft, F4], label: "Alt + F4" }]
+  /** 特殊处理more */
+  // [KeyShortcuts.MORE, {keys: [], label: 'common.more'}],
+]);
+const shortcutKeyOptions = [
+  0,
+  1,
+  2,
+  3,
+  5,
+  4
+  /* CTROL_W */
+  // KeyShortcuts.MORE,
+].map((item) => new cr(item, KeyboardShortcutConfigMap.get(item).label));
+shortcutKeyOptions.map(
+  (item) => KeyboardShortcutConfigMap.get(item.value)
+);
+const KeyboardLabelMap = /* @__PURE__ */ new Map([
+  ["ControlLeft", "Ctrl-L"],
+  ["AltLeft", "Alt-L"],
+  ["MetaLeft", "Windows"],
+  ["ShiftLeft", "Shift-L"],
+  ["AltRight", "Alt-R"],
+  ["ControlRight", "Ctrl-R"],
+  ["ShiftRight", "Shift-R"],
+  ["CapsLock", "Caps Lock"],
+  ["NumpadMultiply", "*"],
+  ["Backspace", "Backspace"]
+]);
+Object.values(genKeyboardKeyList()).flat().flat().forEach((item) => {
+  if (item.isGutter) {
+    return;
+  }
+  if (!KeyboardLabelMap.has(item.code)) {
+    KeyboardLabelMap.set(item.code, item.title);
+  }
+});
+class KeyboardEventHandler {
+  constructor(el, apiWS) {
+    this.el = el;
+    this.apiWS = apiWS;
+    console.log("init keyboard", this.el);
+    this.init();
+  }
+  /** 全局的变量，用来存储键盘按下的键 */
+  keydownKeys = /* @__PURE__ */ new Set();
+  /** 虚拟键盘这儿存储的按下的控制键（之所以这里用ref，是因为界面上需要根据这个值的变化作展示：按下的时候虚拟按键背景色变化） */
+  virtualKeyboardPressedControlKeys = ref(/* @__PURE__ */ new Set());
+  /** 规定这些是操控按键，操控按键在虚拟键盘上点击的时候要被视为长按 */
+  static ControlKeys = [
+    AllKeyboardKeys.ShiftLeft,
+    AllKeyboardKeys.ShiftRight,
+    AllKeyboardKeys.ControlLeft,
+    AllKeyboardKeys.ControlRight,
+    AllKeyboardKeys.AltLeft,
+    AllKeyboardKeys.AltRight,
+    AllKeyboardKeys.MetaLeft,
+    AllKeyboardKeys.Win
+  ];
+  /**
+   * @description 判断是否是操控按键
+   */
+  static isControlKey(key) {
+    return KeyboardEventHandler.ControlKeys.includes(key);
+  }
+  // private configState: KvmConfigState
+  get keyboardControl() {
+    return true;
+  }
+  keyboardEnabled = true;
+  setKeyboardEnabled(enabled) {
+    this.keyboardEnabled = enabled;
+  }
+  init() {
+    this.el.addEventListener("keydown", (event) => {
+      console.log("keydown event:", event);
+      event.preventDefault();
+      this.onKeyDownOrUp(event.code || event.key, true, this.keyboardControl);
+    });
+    this.el.addEventListener("keyup", (event) => {
+      event.preventDefault();
+      this.onKeyDownOrUp(event.code || event.key, false, this.keyboardControl);
+    });
+  }
+  onKeyDownOrUp(key, down, enable = true, isVirtualKeyboard = false) {
+    console.log("key: ", { key, down, enable, isVirtualKeyboard });
+    if (!enable) return;
+    {
+      this.sendHidEvent({ key, state: down }, enable);
+      this.clearAllPressControlDownKeys();
+      if (down) {
+        this.keydownKeys.add(key);
+      } else {
+        if (browser.is_mac && [AllKeyboardKeys.MetaLeft, AllKeyboardKeys.MetaRight].includes(key)) {
+          this.clearAllPressDownKeys();
+        }
+        this.keydownKeys.delete(key);
+      }
+    }
+  }
+  clearAllPressDownKeys() {
+    for (const key of this.keydownKeys) {
+      this.sendEvent({ key, state: false });
+    }
+    this.clearAllPressControlDownKeys();
+  }
+  clearAllPressControlDownKeys() {
+    for (const key of this.virtualKeyboardPressedControlKeys.value) {
+      if (KeyboardEventHandler.isControlKey(key)) {
+        this.virtualKeyboardPressedControlKeys.value.delete(key);
+        this.sendEvent({ key, state: false });
+      }
+    }
+  }
+  isControlKeyDown(key) {
+    if (!KeyboardEventHandler.isControlKey(key)) {
+      return false;
+    }
+    return this.virtualKeyboardPressedControlKeys.value.has(key);
+  }
+  sendShortcutKey(keys) {
+    const states = [true, false];
+    states.forEach((state) => {
+      for (let i = 0; i <= 1; i++) {
+        keys.forEach((key) => {
+          this.sendEvent({ key, state }, true);
+        });
+        i++;
+      }
+    });
+  }
+  sendHidEvent(event, enable = true) {
+    if (enable) {
+      this.sendEvent(event);
+    }
+  }
+  static downedKeys = /* @__PURE__ */ new Set();
+  sendEvent(event, forceSend) {
+    if (!this.keyboardEnabled && !forceSend) {
+      return;
+    }
+    if (event.state) {
+      if (!KeyboardEventHandler.downedKeys.has(event.key)) {
+        KeyboardEventHandler.downedKeys.add(event.key);
+      } else {
+        return;
+      }
+    } else {
+      if (KeyboardEventHandler.downedKeys.has(event.key)) {
+        KeyboardEventHandler.downedKeys.delete(event.key);
+      }
+    }
+    sendHidEvent(this.apiWS, { event_type: "key", event });
+  }
+}
 const deviceModelSelectOptions = [
   new cr("RM1", "RM1"),
   new cr("RM1PE", "RM1PE"),
@@ -7374,18 +7894,16 @@ class KvmStreamConnector {
   videoEl;
   videoBox;
   mouseHandler;
+  keyboardHandler;
   initApiWsSocket() {
     useWsMessage(this.kvm, (ws) => this.initMouseEvent(ws));
   }
   initMouseEvent(ws) {
-    this.mouseHandler = new MouseEventHandler(
-      this.videoBox,
-      this.videoElSelector,
-      ws
-    );
+    this.mouseHandler = new MouseEventHandler(this.videoBox, this.videoElSelector, ws);
+    this.keyboardHandler = new KeyboardEventHandler(this.videoBox, ws);
   }
 }
-const _sfc_main$4 = /* @__PURE__ */ defineComponent({
+const _sfc_main$6 = /* @__PURE__ */ defineComponent({
   __name: "addKvmModal",
   props: {
     open: { type: Boolean }
@@ -7527,19 +8045,64 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const _hoisted_1$3 = { class: "kvm-list" };
+const _hoisted_1$5 = { class: "inner flex-btw" };
+const _sfc_main$5 = /* @__PURE__ */ defineComponent({
+  __name: "kvmListItem",
+  props: {
+    kvm: {}
+  },
+  emits: ["delete"],
+  setup(__props, { emit: __emit }) {
+    const emit = __emit;
+    const removeKvm = () => {
+      emit("delete");
+    };
+    const hovered = ref(false);
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: "list-item pointer bg-primary",
+        onMouseenter: _cache[0] || (_cache[0] = ($event) => hovered.value = true),
+        onMouseleave: _cache[1] || (_cache[1] = ($event) => hovered.value = false)
+      }, [
+        createBaseVNode("div", _hoisted_1$5, [
+          createVNode(unref(At), null, {
+            default: withCtx(() => [
+              createTextVNode(toDisplayString(_ctx.kvm.name), 1)
+            ]),
+            _: 1
+          }),
+          hovered.value ? (openBlock(), createBlock(unref(Oo), {
+            key: 0,
+            icon: "delete",
+            onClick: withModifiers(removeKvm, ["stop"])
+          }, {
+            default: withCtx(() => [
+              createVNode(unref(x), { name: "gl-kvm-delete" })
+            ]),
+            _: 1
+          })) : (openBlock(), createBlock(unref(Mo), { key: 1 }, {
+            default: withCtx(() => [
+              createTextVNode(toDisplayString(_ctx.kvm.deviceModel), 1)
+            ]),
+            _: 1
+          }))
+        ])
+      ], 32);
+    };
+  }
+});
+const KvmListItem = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["__scopeId", "data-v-01f71db4"]]);
+const _hoisted_1$4 = { class: "kvm-list" };
 const _hoisted_2$2 = { class: "flex title" };
 const _hoisted_3$2 = { key: 0 };
-const _hoisted_4$1 = {
+const _hoisted_4$2 = {
   key: 1,
   class: "list-container"
 };
-const _hoisted_5$1 = ["onClick"];
-const _hoisted_6$1 = { class: "inner flex-btw" };
-const _hoisted_7 = { class: "flex" };
-const _sfc_main$3 = /* @__PURE__ */ defineComponent({
+const _hoisted_5$1 = { class: "flex" };
+const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   __name: "layoutKvmList",
-  emits: ["addToPage"],
+  emits: ["addToPage", "remove"],
   setup(__props, { emit: __emit }) {
     const state = reactive({
       addOpen: false,
@@ -7556,6 +8119,16 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
       }
     };
     getKvmDeviceList();
+    const removeKvm = async (device) => {
+      D({
+        content: `Are sure to remove this device ${device.name}?`,
+        async onOk() {
+          await mainService.deleteKvmDevice(device.id);
+          getKvmDeviceList();
+          emits("remove", device.id);
+        }
+      });
+    };
     const handleConnect = async (kvm) => {
       try {
         await mainService.connectKvm(kvm.id);
@@ -7565,7 +8138,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock(Fragment, null, [
-        createBaseVNode("div", _hoisted_1$3, [
+        createBaseVNode("div", _hoisted_1$4, [
           createBaseVNode("div", _hoisted_2$2, [
             createVNode(unref(At), {
               variant: "level2",
@@ -7582,31 +8155,17 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
           createVNode(unref($o), { horizontal: "" }),
           !state.kvmList?.length ? (openBlock(), createElementBlock("div", _hoisted_3$2, [
             createVNode(unref(ko))
-          ])) : (openBlock(), createElementBlock("div", _hoisted_4$1, [
+          ])) : (openBlock(), createElementBlock("div", _hoisted_4$2, [
             (openBlock(true), createElementBlock(Fragment, null, renderList(state.kvmList, (kvm) => {
-              return openBlock(), createElementBlock("div", {
-                class: "list-item bg-primary",
-                onClick: ($event) => handleConnect(kvm),
-                key: kvm.id
-              }, [
-                createBaseVNode("div", _hoisted_6$1, [
-                  createVNode(unref(At), null, {
-                    default: withCtx(() => [
-                      createTextVNode(toDisplayString(kvm.name), 1)
-                    ]),
-                    _: 2
-                  }, 1024),
-                  createVNode(unref(Mo), null, {
-                    default: withCtx(() => [
-                      createTextVNode(toDisplayString(kvm.deviceModel), 1)
-                    ]),
-                    _: 2
-                  }, 1024)
-                ])
-              ], 8, _hoisted_5$1);
+              return openBlock(), createBlock(KvmListItem, {
+                key: kvm.id,
+                kvm,
+                onDelete: ($event) => removeKvm(kvm),
+                onClick: ($event) => handleConnect(kvm)
+              }, null, 8, ["kvm", "onDelete", "onClick"]);
             }), 128))
           ])),
-          createBaseVNode("div", _hoisted_7, [
+          createBaseVNode("div", _hoisted_5$1, [
             createVNode(unref(Q), {
               primary: "",
               onClick: _cache[0] || (_cache[0] = ($event) => state.addOpen = true)
@@ -7620,7 +8179,7 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
           ]),
           _cache[4] || (_cache[4] = createBaseVNode("div", { class: "flex" }, null, -1))
         ]),
-        createVNode(_sfc_main$4, {
+        createVNode(_sfc_main$6, {
           open: state.addOpen,
           "onUpdate:open": _cache[1] || (_cache[1] = ($event) => state.addOpen = $event),
           onSuccess: getKvmDeviceList
@@ -7629,12 +8188,12 @@ const _sfc_main$3 = /* @__PURE__ */ defineComponent({
     };
   }
 });
-const LayoutKvmList = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-ba3d7174"]]);
-const _hoisted_1$2 = {
+const LayoutKvmList = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["__scopeId", "data-v-b6e416e8"]]);
+const _hoisted_1$3 = {
   key: 0,
   class: "stream-window-wrapper position-absolute bg-default"
 };
-const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "kvmDevicePlayer",
   props: {
     kvm: {}
@@ -7643,7 +8202,6 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     const streamWindowRef = ref();
     const streamBoxRef = ref();
     const streamVideoRef = ref();
-    ref();
     const props = __props;
     const STREAM_BOX_ID = "stream-box" + props.kvm.id;
     const videoElId = `kvm-video-${props.kvm.id}`;
@@ -7714,15 +8272,20 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     });
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", {
+        id: "stream-window",
         ref_key: "streamWindowRef",
         ref: streamWindowRef,
-        id: "stream-window",
-        class: normalizeClass({ "bg-default": true, bordered: true, "stream-window-inited": state.initVideoJanusFinished })
+        class: normalizeClass({
+          "bg-default": true,
+          bordered: true,
+          "stream-window-inited": state.initVideoJanusFinished
+        })
       }, [
         createBaseVNode("div", {
+          id: STREAM_BOX_ID,
           ref_key: "streamBoxRef",
           ref: streamBoxRef,
-          id: STREAM_BOX_ID,
+          tabindex: "-1",
           onBlur: handleStreamBoxBlur,
           onFocus: handleStreamBoxFocus,
           onClick: handleStreamBoxFocus,
@@ -7730,24 +8293,96 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
           onMouseleave: handleMouseLeave
         }, [
           createBaseVNode("video", {
-            width: 384 * 2,
             id: videoElId,
             ref_key: "streamVideoRef",
             ref: streamVideoRef,
+            class: "full-width kvm-video",
             playsinline: "",
             autoplay: "",
             muted: ""
           }, null, 512)
         ], 544),
-        !state.initVideoJanusFinished ? (openBlock(), createElementBlock("div", _hoisted_1$2)) : createCommentVNode("", true)
+        !state.initVideoJanusFinished ? (openBlock(), createElementBlock("div", _hoisted_1$3)) : createCommentVNode("", true)
       ], 2);
     };
   }
 });
-const KvmDevicePlayer = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-8773a9a7"]]);
-const _hoisted_1$1 = { class: "kvm-content" };
-const _hoisted_2$1 = { class: "flex full-height" };
+const KvmDevicePlayer = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["__scopeId", "data-v-70220d41"]]);
+const _hoisted_1$2 = { key: 0 };
+const _sfc_main$2 = /* @__PURE__ */ defineComponent({
+  __name: "baseRow",
+  props: {
+    countPerLine: {},
+    items: { default: () => [] },
+    gutter: { default: 16 }
+  },
+  setup(__props) {
+    const EMPTY_ITEM = Symbol("empty_item");
+    const props = __props;
+    const computedItems = computed(() => {
+      try {
+        const items = props.items.reduce((acc, item, index) => {
+          const rowIndex = Math.floor(index / props.countPerLine);
+          if (!acc[rowIndex]) {
+            acc[rowIndex] = [];
+          }
+          acc[rowIndex].push(item);
+          return acc;
+        }, []);
+        const lastOuterChildNeeds = props.countPerLine - items[items.length - 1].length;
+        if (lastOuterChildNeeds > 0) {
+          items[items.length - 1].push(...Array(lastOuterChildNeeds).fill(EMPTY_ITEM));
+        }
+        return items;
+      } catch (error) {
+        return [];
+      }
+    });
+    const computedStyle = computed(() => {
+      let gutterX, gutterY;
+      if (props.gutter instanceof Array) {
+        [gutterX, gutterY] = props.gutter;
+      } else {
+        [gutterX, gutterY] = [props.gutter, props.gutter];
+      }
+      return { outer: { gap: gutterY + "px" }, inner: { gap: gutterX + "px" } };
+    });
+    return (_ctx, _cache) => {
+      return openBlock(), createElementBlock("div", {
+        class: "base-row display flex-start flex-nowrap flex-column flex-1",
+        style: normalizeStyle(computedStyle.value.outer)
+      }, [
+        (openBlock(true), createElementBlock(Fragment, null, renderList(computedItems.value, (outer, index) => {
+          return openBlock(), createElementBlock("div", {
+            key: index,
+            class: "row-line full-width",
+            style: normalizeStyle(computedStyle.value.inner)
+          }, [
+            (openBlock(true), createElementBlock(Fragment, null, renderList(outer, (inner, indexInner) => {
+              return openBlock(), createElementBlock("div", {
+                key: indexInner,
+                class: "base-col"
+              }, [
+                inner === unref(EMPTY_ITEM) ? (openBlock(), createElementBlock("div", _hoisted_1$2)) : renderSlot(_ctx.$slots, "default", {
+                  key: 1,
+                  data: inner
+                }, void 0, true)
+              ]);
+            }), 128))
+          ], 4);
+        }), 128))
+      ], 4);
+    };
+  }
+});
+const BaseRow = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["__scopeId", "data-v-dc01da78"]]);
+const _hoisted_1$1 = { class: "flex-btw" };
+const _hoisted_2$1 = { class: "flex" };
 const _hoisted_3$1 = {
+  class: "flex",
+  style: { "margin-top": "16px" }
+};
+const _hoisted_4$1 = {
   key: 1,
   class: "content"
 };
@@ -7757,40 +8392,115 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     kvmList: {}
   },
   setup(__props) {
+    const { width } = Ae();
+    const contentRef = ref();
     const props = __props;
+    const state = reactive({
+      dragMode: false
+    });
+    const countPerline = computed(() => {
+      if (width.value >= 1364) {
+        return 2;
+      }
+      return 1;
+    });
+    const requestFullscreen = () => {
+      contentRef.value.requestFullscreen();
+    };
+    const handleDrag = () => {
+      state.dragMode = true;
+    };
     return (_ctx, _cache) => {
-      return openBlock(), createElementBlock("div", _hoisted_1$1, [
-        createBaseVNode("div", _hoisted_2$1, [
-          !props.kvmList?.length ? (openBlock(), createBlock(unref(ko), { key: 0 })) : (openBlock(), createElementBlock("div", _hoisted_3$1, [
-            (openBlock(true), createElementBlock(Fragment, null, renderList(props.kvmList, (kvm) => {
-              return openBlock(), createBlock(KvmDevicePlayer, {
-                key: kvm.id,
-                kvm
-              }, null, 8, ["kvm"]);
-            }), 128))
+      return openBlock(), createElementBlock("div", {
+        ref_key: "contentRef",
+        ref: contentRef,
+        class: "kvm-content full-height"
+      }, [
+        createBaseVNode("div", _hoisted_1$1, [
+          createVNode(unref(At), {
+            type: "large-title-m",
+            center: "",
+            class: "text-primary"
+          }, {
+            default: withCtx(() => _cache[0] || (_cache[0] = [
+              createTextVNode("Welcome to KVM Monitor", -1)
+            ])),
+            _: 1,
+            __: [0]
+          }),
+          createBaseVNode("div", _hoisted_2$1, [
+            createVNode(unref(Oo), {
+              style: { "margin-left": "12px" },
+              icon: "",
+              onClick: requestFullscreen
+            }, {
+              default: withCtx(() => [
+                createVNode(unref(x), { name: "gl-kvm-fullscreen" })
+              ]),
+              _: 1
+            }),
+            createVNode(unref(Oo), {
+              style: { "margin-left": "12px" },
+              icon: "",
+              onClick: handleDrag
+            }, {
+              default: withCtx(() => [
+                createVNode(unref(x), { name: "gl-kvm-drag" })
+              ]),
+              _: 1
+            })
+          ])
+        ]),
+        createBaseVNode("div", _hoisted_3$1, [
+          !props.kvmList?.length ? (openBlock(), createBlock(unref(ko), { key: 0 })) : (openBlock(), createElementBlock("div", _hoisted_4$1, [
+            createVNode(BaseRow, {
+              gutter: 0,
+              "count-per-line": countPerline.value,
+              items: props.kvmList
+            }, {
+              default: withCtx(({ data }) => [
+                createVNode(KvmDevicePlayer, { kvm: data }, null, 8, ["kvm"])
+              ]),
+              _: 1
+            }, 8, ["count-per-line", "items"])
           ]))
         ])
-      ]);
+      ], 512);
     };
   }
 });
+const LayoutKvmContent = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["__scopeId", "data-v-315a5f09"]]);
 const _hoisted_1 = { class: "main-layout full-height" };
 const _hoisted_2 = { class: "header bg-primary flex-btw" };
 const _hoisted_3 = { class: "flex" };
-const _hoisted_4 = { class: "content flex" };
+const _hoisted_4 = { class: "content flex-start flex-nowrap" };
 const _hoisted_5 = { class: "content-left" };
 const _hoisted_6 = { class: "content-right flex-1" };
 const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "mainLayout",
   setup(__props) {
+    const router = useRouter();
     const state = reactive({
       kvmList: []
     });
+    const removeKvm = async (id) => {
+      state.kvmList = state.kvmList.filter((item) => item.id !== id);
+    };
     const handleConnectDevice = (device) => {
       if (state.kvmList.find((item) => item.id === device.id)) {
         return;
       }
       state.kvmList.push(device);
+    };
+    const logout = () => {
+      D({
+        title: "Logout",
+        content: "Are you sure you want to logout?",
+        onOk() {
+          removeLogin();
+          router.push("/login");
+        }
+      });
     };
     return (_ctx, _cache) => {
       return openBlock(), createElementBlock("div", _hoisted_1, [
@@ -7811,7 +8521,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                 createVNode(unref(x), {
                   size: 24,
                   class: "pointer",
-                  name: "gl-kvm-logout"
+                  name: "gl-kvm-logout",
+                  onClick: logout
                 })
               ]),
               _: 1
@@ -7820,19 +8531,22 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         ]),
         createBaseVNode("div", _hoisted_4, [
           createBaseVNode("div", _hoisted_5, [
-            createVNode(LayoutKvmList, { onAddToPage: handleConnectDevice })
+            createVNode(LayoutKvmList, {
+              onRemove: removeKvm,
+              onAddToPage: handleConnectDevice
+            })
           ]),
           createBaseVNode("div", _hoisted_6, [
-            createVNode(_sfc_main$1, {
-              kvmList: state.kvmList
-            }, null, 8, ["kvmList"])
+            createVNode(LayoutKvmContent, {
+              "kvm-list": state.kvmList
+            }, null, 8, ["kvm-list"])
           ])
         ])
       ]);
     };
   }
 });
-const mainLayout = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-6954937f"]]);
+const mainLayout = /* @__PURE__ */ _export_sfc(_sfc_main, [["__scopeId", "data-v-39af54f5"]]);
 export {
   mainLayout as default
 };

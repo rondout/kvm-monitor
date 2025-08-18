@@ -11,6 +11,7 @@
     <div
       :id="STREAM_BOX_ID"
       ref="streamBoxRef"
+      tabindex="-1"
       @blur="handleStreamBoxBlur"
       @focus="handleStreamBoxFocus"
       @click="handleStreamBoxFocus"
@@ -66,7 +67,7 @@ import { KvmStreamConnector, type KvmDeviceInfo } from '@renderer/models/kvm.mod
 const streamWindowRef = ref<HTMLDivElement>()
 const streamBoxRef = ref<HTMLElement>()
 const streamVideoRef = ref<HTMLVideoElement>()
-const localStreamVideoRef = ref<HTMLVideoElement>()
+// const localStreamVideoRef = ref<HTMLVideoElement>()
 // const streamCanvasRef = ref<HTMLCanvasElement>()
 // const audioRef = ref<HTMLAudioElement>()
 

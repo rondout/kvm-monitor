@@ -5086,10 +5086,11 @@ function createWindow() {
     height: 768,
     show: false,
     autoHideMenuBar: true,
+    title: "KVM Monitor",
     ...process.platform === "linux" ? { icon } : {},
     webPreferences: {
       webSecurity: false,
-      devTools: true,
+      // devTools: true,
       allowRunningInsecureContent: true,
       contextIsolation: false,
       preload: require$$0.join(__dirname, "../preload/index.js"),

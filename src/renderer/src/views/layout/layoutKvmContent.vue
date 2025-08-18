@@ -1,6 +1,16 @@
 <template>
-  <div class="kvm-content full-height">
-    <BaseText type="large-title-m" center class="text-primary">Welcome to KVM Monitor</BaseText>
+  <div ref="contentRef" class="kvm-content full-height">
+    <div class="flex-btw">
+      <BaseText type="large-title-m" center class="text-primary">Welcome to KVM Monitor</BaseText>
+      <div class="flex">
+        <BaseIconButton style="margin-left: 12px" icon="" @click="requestFullscreen">
+          <GlSvg name="gl-kvm-fullscreen" />
+        </BaseIconButton>
+        <BaseIconButton style="margin-left: 12px" icon="" @click="handleDrag">
+          <GlSvg name="gl-kvm-drag" />
+        </BaseIconButton>
+      </div>
+    </div>
     <div class="flex" style="margin-top: 16px">
       <BaseNoData v-if="!props.kvmList?.length" />
       <div v-else class="content">
@@ -16,17 +26,22 @@
 
 <script setup lang="ts">
 import type { KvmDeviceInfo } from '@renderer/models/kvm.model'
-import { BaseNoData, BaseText } from '@gl/main/components'
+import { BaseIconButton, BaseNoData, BaseText, GlSvg } from '@gl/main/components'
 import KvmDevicePlayer from '../kvm/kvmDevicePlayer.vue'
 import BaseRow from '@renderer/components/baseRow.vue'
-import { computed } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useWindowSize } from '@gl/main'
 
 const { width } = useWindowSize()
+const contentRef = ref<HTMLDivElement>()
 
 const props = defineProps<{
   kvmList: KvmDeviceInfo[]
 }>()
+
+const state = reactive({
+  dragMode: false
+})
 
 const countPerline = computed(() => {
   if (width.value >= 1364) {
@@ -34,6 +49,14 @@ const countPerline = computed(() => {
   }
   return 1
 })
+
+const requestFullscreen = () => {
+  contentRef.value.requestFullscreen()
+}
+
+const handleDrag = () => {
+  state.dragMode = true
+}
 </script>
 
 <style lang="scss" scoped>
